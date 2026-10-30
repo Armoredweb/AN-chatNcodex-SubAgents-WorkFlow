@@ -65,7 +65,7 @@ Prossiga com a decomposição conforme o workflow canônico.
 
 Após a primeira decomposição e criação do índice, ocorre uma pausa obrigatória para revisão do escopo. O comando `continue` inicia o **Decomposition Audit Gate**, verificando MASTER_PLAN ↔ PLAN_INDEX nos dois sentidos.
 
-A expansão deve especificar caminhos e símbolos reais, contratos, algoritmos, pseudocódigo/código relevante, concorrência, integração e testes com Expected Evidence.
+A expansão deve priorizar **o máximo de código de implementação correto e útil que o ChatGPT conseguir produzir**, incluindo funções, interfaces, tratamento de erros, integração e pseudocódigo detalhado. Plan Parts maiores e ricos em código são desejáveis quando economizam raciocínio da Luna. Não reduzir código útil para deixar os planos pequenos. Planejar **poucos testes essenciais por lote/GOAL**, sem exigir teste para cada Plan Part.
 
 Antes do handoff ao Codex, o ChatGPT executa:
 - **Pass A:** otimização sem perder informações necessárias;
@@ -100,15 +100,19 @@ Depois de validar o ambiente:
 ~~~text
 Inicie o GOAL G01 do CODEX_HANDOFF.md atual.
 Luna é o orquestrador e implementador principal.
-Implemente diretamente por padrão; delegue somente tarefas
-independentes vantajosas ou bloqueios difíceis comprovados,
+Implemente grandes partes coerentes com o código dos planos.
+Delegue só tarefas independentes úteis ou bloqueios comprovados,
 sempre com contexto mínimo e limites explícitos.
-Integre, teste e comprove Expected Evidence.
+Teste os resultados essenciais no fim do lote/GOAL,
+não cada Plan Part. Reutilize testes aprovados enquanto
+código/dependências/configuração relevantes não mudarem.
+Se falhar, corrija e repita só os testes afetados.
+Comprove Expected Evidence no estado final pertinente.
 Respeite arquitetura e arquivos autorizados.
 Não solicite trocas manuais de modelo durante o GOAL.
 ~~~
 
-Luna corrige falhas normais de build/testes sem escalonar imediatamente. Quando necessário, chama SOL preferencialmente em modo **Solve Only** (solução para Luna aplicar). **Scoped Implementation** é permitido para um fragmento realmente difícil de implementar.
+Luna implementa lotes coerentes e corrige falhas normais sem escalonar imediatamente. Testes antecipados ficam reservados a contratos fundamentais ou riscos altos. Testes anteriormente aprovados só devem ser repetidos quando o código coberto, suas dependências relevantes ou o ambiente/configuração mudarem; após uma correção, executar apenas os testes impactados. Quando necessário, chama SOL preferencialmente em modo **Solve Only** (solução para Luna aplicar). **Scoped Implementation** é permitido para um fragmento realmente difícil de implementar.
 
 O especialista pode solicitar arquivos adicionais específicos e justificar a necessidade; Luna só autoriza ampliação operacional dentro dos limites já aprovados.
 

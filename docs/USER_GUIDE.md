@@ -64,7 +64,7 @@ Proceed with decomposition under the canonical workflow.
 
 ChatGPT persists the master baseline and index and stops after the initial decomposition for your review. The next `continue` runs the **bidirectional Decomposition Audit Gate**, then later Plan Part expansion.
 
-For substantial Plan Parts ChatGPT supplies verified symbols, contracts, algorithms, ownership, code/pseudocode when useful, testing and Expected Evidence. After expansion it performs:
+For substantial Plan Parts, ChatGPT should provide **as much verified, directly useful implementation code as practicable**—functions, interfaces, error handling, integrations, and detailed pseudocode—rather than shrinking the document at Luna's expense. More code-heavy Plan Parts are encouraged when that reduces later implementation reasoning. Specify **a small shared set of essential tests at the batch/GOAL boundary**, not automatic tests per part. After expansion it performs:
 - **Pass A:** implementation-preserving optimization;
 - **Pass B:** specialist minimization, Luna routing, and worthwhile parallelism;
 - **Pass C:** cross-plan, current-source, and multi-agent consistency.
@@ -99,14 +99,17 @@ After compatibility is verified, start the approved GOAL:
 ~~~text
 Start GOAL G01 from the current CODEX_HANDOFF.md.
 Luna is the primary orchestrator and implementer.
-Implement directly by default; delegate only independent useful work
-or justified hard blockers with minimal-context packets.
-Integrate, test, and prove all Expected Evidence before reporting done.
+Implement substantial coherent slices directly from prepared code;
+delegate only useful independent work or justified hard blockers.
+Test the essential integrated batch/GOAL outcomes, not every Plan Part.
+Reuse passing tests unless affected code/dependencies/config changed.
+On failure, repair then rerun only failed/impacted checks.
+Prove all Expected Evidence against the final relevant code state.
 Stay inside approved architecture and write scope.
 Do not ask me to switch models during the GOAL.
 ~~~
 
-Luna implements, optionally uses independent Luna workers, escalates a verified hard problem in **Solve Only** mode first, and performs integration/validation. A specialist can request specific additional context; Luna authorizes it only within already-approved limits.
+Luna implements larger coherent slices, optionally uses independent Luna workers, escalates a verified hard problem in **Solve Only** mode first, and validates at meaningful boundaries. Earlier tests are limited to foundational or high-risk dependencies. Passing results are not repeatedly rerun unless the tested area or relevant dependencies/environment changed. A specialist can request specific additional context; Luna authorizes it only within already-approved limits.
 
 GOALs may require a user action if the client must resume a paused session, request genuine permission, or resolve an architectural blocker. These are not manual model switches.
 

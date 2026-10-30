@@ -10,7 +10,8 @@ The workflow repository defines the protocol; the consumer repository holds its 
 
 - ChatGPT owns architecture, research, source inspection, decomposition, detailed planning, consistency, specialist-minimization, approval preparation, convergence review, and cleanup preparation.
 - Codex runs a **Luna High primary agent that is both orchestrator and implementer**. It implements directly by default, delegates independent work to Luna workers only when beneficial, and escalates real hard blockers to a more capable specialist.
-- The workflow optimizes **implementation readiness per token** and the cost of achieving validated outcomes, not agent count, plan length, or unverified token estimates.
+- The workflow optimizes **implementation readiness and useful implementation code produced by ChatGPT**, shifting complex reasoning away from Codex. Favor code/pseudocode-rich plans over superficially short plans; minimize redundant prose and costly Codex rediscovery, not useful technical content.
+- Execute **coherent implementation batches with few, high-value validation gates**; do not require a new test or a test run for every Plan Part or microstep.
 - A GOAL is an autonomous, bounded implementation mission; plan files do not define agent sessions, commits, or test boundaries.
 - This protocol never authorizes bypassing product, account, safety, rate, security, or platform limits. A subagent is not an authorization bypass.
 
@@ -75,20 +76,22 @@ Dependency-oriented routing and traceability map: macroblocks, microsteps, order
 
 The matrix records exact verified model IDs/versions, effort, client/version/verification date, the primary role, Luna worker roles, permitted specialists, accepted fallbacks, routing constraints, and blocked/unverified features. Revalidate material runtime differences before execution. Never encode mutable model choices in Plan Part filenames.
 
-Each GOAL entry identifies direct Luna ownership, parallel candidates, specialist triggers, delegation envelopes, integration, and validation. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
+Each GOAL entry identifies direct Luna ownership, parallel candidates, specialist triggers, delegation envelopes, integration, **batch-level validation boundaries**, the essential affected-test set and reusable prior evidence. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
 
 ### Plan Parts
 
-Filename/path describe stable work identity, not Luna/SOL assignment. A Plan Part has only the technical depth warranted by the mechanism, including as relevant:
+Filename/path describe stable work identity, not Luna/SOL assignment. A Plan Part must be **code-forward**, with enough implementation-ready technical content for Luna to build mechanisms instead of reasoning them out again. Include, as relevant:
 - Goal and **current-to-target** behavior, verified repo base and real paths/symbols;
 - fixed decisions, non-goals, invariants, types, state, ownership/lifetime, and contracts;
-- interfaces, data flow, algorithms, concrete call sequences, pseudocode/code, and migration order;
-- failure/retry/cancellation, races, persistence, resource/performance and cleanup behavior;
+- **substantial concrete source code, function bodies, interfaces, implementation skeletons, or detailed executable-style pseudocode** for non-trivial mechanisms, including algorithms, call sequences, data flow, and migration order;
+- failure/retry/cancellation, races, persistence, resource/performance and cleanup behavior expressed in the proposed implementation where useful;
 - dependencies, writable ownership, independent/parallel slices, integration boundaries;
-- build/test/instrumentation actions and **objective Expected Evidence**;
+- **essential** build/test/instrumentation procedures and objective Expected Evidence **at shared batch/GOAL validation boundaries**, not an automatic test per part;
 - a proposed specialist trigger and minimal context only when justified.
 
-Be explicit about proposed names versus existing symbols. Do not reproduce large source dumps or research transcripts.
+**Default toward more useful implementation code, not less.** If ChatGPT has enough verified source and decisions to draft a correct implementation, provide it. Prefer code that can be adapted or implemented directly over prose describing what Luna should invent. Use precise pseudocode when exact source would require unverified APIs or would lock in an unjustified detail. Explain integration points, ownership, and assumptions. Code volume is not itself a goal: omit boilerplate, existing unchanged code, speculative unverified implementations, and irrelevant examples.
+
+Be explicit about proposed names versus existing symbols. Avoid large *unchanged* source dumps and research transcripts; substantial **new implementation code** is encouraged. A longer, code-dense Plan Part is preferable to a short narrative that transfers difficult work to Luna.
 
 ### CHAT_HANDOFF.md
 
@@ -141,13 +144,19 @@ For each substantial Plan Part:
 2. Confirm upstream/downstream contracts, ownership, and approved decisions.
 3. Perform **targeted current external research** when comparable solutions, standards, or changing platform capabilities can materially affect the design; examine the actual sources and trade-offs. Do not create decorative research requirements for trivial repository-local work.
 4. Resolve meaningful alternatives in ChatGPT, recording only implementation-relevant reasoning and sources.
-5. Specify hard mechanisms concretely: types, transitions, ownership, data flow, algorithms and pseudocode/code where that removes Luna reasoning.
-6. Define tests, migration, failure/concurrency cases, observability, integration, and objective Expected Evidence.
+5. **Write the implementation before merely describing it** when enough source evidence exists: provide concrete data types, function signatures and bodies, sequences, error handling, and integration code where useful; otherwise give sufficiently precise pseudocode with explicit assumptions. Do not remove working implementation detail to make a Plan Part shorter.
+6. Specify migration, failure/concurrency cases, observability, integration, and the **smallest essential shared validation set** proving the relevant GOAL/batch outcomes. Avoid creating or running tests for each Plan Part by default.
 7. Mark independent work and potential specialist calls only when useful.
 
-**Implementation Readiness Self-Check:** Can a Luna High implementer complete the part without inventing essential architecture, interfaces, algorithms, concurrency rules, migration sequencing, or acceptance criteria? Are current repo facts verified and dependencies consistent? Repair material gaps before marking expanded.
+### Code-first planning policy
 
-Plans must be the **shortest complete** actionable specification. Small complete files are good. For unusually large single parts, roughly 1,200–1,600 lines is a safety guide rather than a quota; modest 1,600–1,700 overage need not trigger redivision, but split by cohesive responsibility when readability or context safety warrants. Never inflate documents for a length target.
+ChatGPT should do as much of the hard coding and algorithm design as is safely possible **during planning**. A rich Plan Part may include multiple proposed functions or implementation fragments, not merely headings and short bullet points. Proactively add code when it eliminates Luna implementation decisions or likely specialist calls. Check proposed code against current types, APIs, ownership and surrounding call sites; label unverified fragments explicitly and replace invented APIs with precise integration contracts or pseudocode.
+
+Prioritize **(1) correctness and applicable contracts, (2) code/pseudocode completeness for difficult behavior, (3) clear integration instructions, (4) concise explanatory prose**. Do not optimize for low line counts at the expense of useful code. No arbitrary minimum code quota; never pad with boilerplate or rewrite working unchanged source simply to enlarge a plan.
+
+**Implementation Readiness Self-Check:** Could a Luna High implementer use the included code/pseudocode directly, without reinventing hard algorithms, architecture, interfaces, ownership, concurrency, or sequencing? Have useful concrete implementations been omitted solely to keep the document short? Are repo facts and dependencies verified and batch-level acceptance evidence clear? Repair any material gap before marking expanded.
+
+A file's line count is a **context-safety and maintainability indicator, not a brevity target**. The former ~1,200–1,600-line guidance may prompt a safety check, but a coherent, code-heavy file exceeding it is acceptable. Split by meaningful responsibility only when readability, dependencies, or context capacity require it; preserve complete implementation fragments and cross-part contracts.
 
 ## 9. Final optimization and multi-agent consistency gates
 
@@ -155,7 +164,7 @@ After all required parts are expanded, perform the full gates in order. Checkpoi
 
 ### Pass A — implementation-preserving optimization
 
-Remove filler, outdated rationale, duplicated descriptions, ambiguous choices, and avoidable planning left to Luna. Strengthen unverified contracts, algorithms, migration steps, race handling, pseudocode/code, and missing test evidence. Never remove a requirement or failure behavior just to save tokens.
+Remove filler, outdated rationale, duplicated explanations, ambiguous choices, and avoidable planning left to Luna. **Increase actionable code density**: add missing concrete implementations, function bodies, algorithms, migration steps, race/error handling, and pseudocode where verified source permits. Do **not** compress or remove useful implementation code just to shrink the plan. Consolidate redundant test instructions into shared GOAL/batch validation without removing essential evidence or failure behavior.
 
 ### Pass B — Specialist Minimization and Agent Routing
 
@@ -175,7 +184,7 @@ Build meaningful Implementation Batches; mark foundational GOALs whose evidence 
 - bounded mission, current-to-target delta, dependencies, authorized modifications;
 - Luna direct steps, optional independent worker tasks and ownership;
 - justified specialist triggers and smallest initial delegation packet;
-- integration sequence, rollback/recovery rules, validation and Expected Evidence.
+- integration sequence, rollback/recovery rules, **a substantial implementation batch followed by few essential tests at its meaningful boundary**, and Expected Evidence. Include earlier tests only for justified risk/foundational gates; identify which previously passing checks remain valid unless affected code/dependencies change.
 
 Confirm capability matrix and compatibility/bootstrap obligations, then persist `CODEX_HANDOFF.md`. The user explicitly starts the Codex implementation; planning approval is not implementation-start authorization.
 
@@ -235,7 +244,7 @@ Before spawning workers, record:
 1. Dependency prerequisites and immutable upstream contracts.
 2. File/module ownership and allowed writes.
 3. Shared state: generated files, caches, databases, test fixtures, build directories, ports, locks, and migrations.
-4. Integration owner, timing/order, merge plan, and tests.
+4. Integration owner, timing/order, merge plan, and a **shared post-integration validation boundary** rather than a test run per worker or Plan Part.
 5. Concurrency ceiling and stop/failure procedure.
 
 Read-only exploration can overlap widely if useful. Write tasks require non-conflicting ownership and compatible shared resources. Different source files do **not** automatically mean independent tasks. Where practical, use isolated worktrees/branches for writes that cannot safely share a workspace; otherwise serialize.
@@ -268,10 +277,11 @@ No specialist may unilaterally alter approved architecture, ownership, safety co
 Starting a GOAL is a user action. Once started and compatible:
 1. Luna reads the persisted `CODEX_HANDOFF.md`, current `PLAN_INDEX.md`, and relevant Plan Parts (not all parts by default), checks source/HEAD and permitted files.
 2. Verify prerequisites and foundational Expected Evidence, identify direct versus parallel work, and start implementing **without gratuitous pauses**.
-3. Use prepared interfaces, algorithms, and pseudocode/code; do not reopen settled architecture.
+3. **Implement a substantial coherent slice using the Plan Parts' code/pseudocode**, integrating relevant changes before testing at the planned shared boundary. Do not reopen settled architecture or test every microstep.
 4. Delegate only independent tasks or justified specialist problems; manage progressive context and safely integrate.
-5. Validate relevant intermediate invariants when needed, then run the GOAL's final build/tests/instrumentation and **Expected Evidence**.
-6. Report deviations, evidence, changes, and blockers concisely, persisting only durable state. Complete the GOAL when its acceptance contract is met.
+5. Run the **minimum necessary post-batch/GOAL validation** proving Expected Evidence. Run an earlier check only when a foundational dependency, destructive change, high-risk invariant, or diagnosis demands it.
+6. If a check fails, fix the underlying defect and rerun **failed/impacted** checks; expand to broader tests only if the repair affects other areas. Reuse unchanged previously passing evidence rather than restarting every suite.
+7. Report deviations, evidence, changes, and blockers concisely, persisting only durable state. Complete the GOAL when its acceptance contract is met.
 
 Do not stop merely because a compiler error or test failure appears. Do stop at genuine authorization/security/platform limits, unresolvable specialist or tool failure, invalid architecture, or impossible acceptance evidence. Do not promise background continuation or automatic resumption of a paused session.
 
@@ -279,9 +289,21 @@ A user-triggered `continue` or equivalent client resume may be required after an
 
 ## 15. Tests, Expected Evidence, and observability
 
-Every GOAL declares **Expected Evidence** that actually proves the requested behavior. Existing test suite success alone is insufficient if no test or observation exercises the intended invariant.
+Every GOAL declares **Expected Evidence** that actually proves the requested behavior. Evidence can be targeted unit/integration tests, a build, API/ABI inspection, migration state, runtime behavior, deterministic reproduction, a measurement, or verified generated artifacts. Existing tests can satisfy new requirements when they genuinely cover the behavior; do not add redundant tests solely because a new Plan Part exists.
 
-Possible evidence: targeted unit/integration tests, clean build, API/ABI shape, migration result, runtime state, deterministic repro, measured performance threshold, or verified generated artifacts. Make validation proportional to risk. Foundational GOALs must validate before dependent work begins.
+### Test planning: essential coverage, not per-part accumulation
+
+- **Plan testing at meaningful Implementation Batch/GOAL boundaries.** Favor larger coherent implementation slices, then a small, decisive validation set at the end. A Plan Part, microstep, subagent return, or individual file change does not automatically trigger its own test run.
+- **Do not prescribe, generate, or execute a new test for every Plan Part.** Select the minimum combination of existing and new checks needed to prove the approved Expected Evidence and critical invariants. Add tests for missing meaningful coverage, not for ritual completeness.
+- **Early checks are exceptions** when necessary to prove a foundational contract before dependents, prevent costly propagation of a serious fault, validate a destructive migration, or de-risk concurrency/security/data-loss behavior. A quick compiler/type check may also be useful to unblock implementation. Do not turn these exceptions into an always-on per-edit loop.
+- **Reuse passing results only while still valid.** A result must identify the tested code/commit or working-tree state, test version, relevant dependencies/configuration, and environment assumptions where material. If none of the covered source, transitive dependencies, build/test configuration, generated state, or runtime conditions that affect the check have changed, do not rerun it merely because another test was added elsewhere.
+- **Invalidate affected evidence, not everything.** Changes in tested code or its relevant dependencies, shared infrastructure, toolchain/configuration, or test behavior require the impacted tests to be rerun; changes outside that impact boundary do not. When impact cannot be established reliably, run the minimum broader regression set needed to restore confidence.
+- **Failure-driven loop:** first run the selected end-of-batch checks; diagnose failures, repair, rerun the failed/affected checks, and repeat only while producing material progress. Do not restart the full suite after every fix. Before declaring the GOAL done, confirm each required Expected Evidence result applies to the **final relevant code state**.
+- **Broader clean validation** belongs at real integration/release/convergence boundaries when cross-cutting changes justify it, and at the explicit clean rebuild gate of Cycle Closure. Preserve safety-critical or mandatory project tests despite the preference for fewer runs.
+
+Do not confuse **fewer runs** with **weaker evidence**. Record the selected validation boundary and evidence validity in the index/handoff; no continuously growing cumulative test checklist.
+
+### Execution Evidence
 
 At GOAL completion produce a compact **Execution Evidence** summary:
 - GOAL ID and verified base/result commit or working-tree state;
@@ -296,7 +318,7 @@ Do not fabricate token totals, effort routing, or benchmark numbers. Do not keep
 
 After a completed implementation batch, ChatGPT freshly compares **current repository code and test evidence** with the approved master/index/Plan Parts.
 
-Classify any mismatch as missing, partial, contradictory, unrequested, or an approved requirement change. For material divergences, create bounded corrective GOALs with Expected Evidence; do not silently accept code as the new requirement. Re-run targeted convergence checks until intended behavior is supported by evidence or a genuine blocker/user decision remains.
+Classify any mismatch as missing, partial, contradictory, unrequested, or an approved requirement change. For material divergences, create bounded corrective GOALs with Expected Evidence; do not silently accept code as the new requirement. **Inspect and reuse still-valid passing evidence first.** Re-run checks only for changed/impacted areas, invalid evidence, or an uncovered required behavior, until intended behavior is supported or a genuine blocker/user decision remains.
 
 Preserve observed bugs or hot-path problems outside approved scope as concise follow-up findings, not opportunistic undocumented changes.
 

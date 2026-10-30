@@ -6,11 +6,11 @@ A ChatGPT-first planning and Codex multi-agent implementation workflow.
 
 ## What it does
 
-- **ChatGPT plans:** inspect current source, settle architecture and interfaces, design algorithms, write useful pseudocode/code, decompose work, audit consistency, and define objective evidence before implementation.
+- **ChatGPT plans code-first:** inspect current source, settle architecture and interfaces, design algorithms, and produce **substantial verified implementation code or detailed pseudocode** to reduce Luna's reasoning. Code-rich Plan Parts are welcome; brevity must never remove useful implementation detail.
 - **Codex executes:** a Luna High primary agent orchestrates **and implements** each bounded GOAL; independent Luna workers are optional, not mandatory.
 - **Specialists are exceptional:** a stronger model such as SOL High receives only a proven hard problem, preferably in **Solve Only** mode; **Scoped Implementation** is the fallback for a fragment Luna cannot safely implement.
 - **Context stays deliberate:** minimal delegation packets, justified progressive context requests, explicit ownership, and no unnecessary full-history forks.
-- **One autonomous GOAL:** integrate and validate from start to finish without asking the user to switch models manually; stop at genuine authorization, safety, platform, or unresolved-blocker boundaries.
+- **One autonomous GOAL:** implement coherent large batches and run **few essential tests at meaningful integration boundaries**. Reuse unaffected passing evidence, rerun only impacted tests after repairs, and complete without asking the user to switch models manually; stop at genuine authorization, safety, platform, or unresolved-blocker boundaries.
 
 This is an independently maintained successor to [AN-chatNcodex-WorkFlow](https://github.com/Armoredweb/AN-chatNcodex-WorkFlow), not a synchronized fork. The original remains reference-only.
 
@@ -38,7 +38,7 @@ Exact model IDs, effort levels, platform capabilities, permission boundaries, an
 
 ## Governing principles
 
-1. Implementation readiness per token: short **complete** plans, not short plans with missing mechanisms.
+1. Implementation readiness through **code-forward complete plans**: prioritize useful code and precise pseudocode over aggressive document compression; shorten redundant prose, not the implementation.
 2. No unnecessary specialist calls, repeated scans, artificial retries, or token-heavy context forwarding.
 3. Parallelism only when dependencies, write ownership, integration, and shared state make it beneficial and safe.
 4. Code and repository evidence outrank memory or obsolete notes. Approved requirements still govern convergence.
