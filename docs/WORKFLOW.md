@@ -77,7 +77,7 @@ Dependency-oriented routing and traceability map: macroblocks, microsteps, order
 
 The matrix is **platform-profiled**: for each supported platform, record primary, worker and optional specialist roles, exact model IDs/versions and effort **when the interface exposes them**, otherwise the verified selector name/tier and its resolution limitation; client/surface/version, verification date, permitted fallbacks, routing constraints, and unavailable features. Include `single-model` and `dual-tier` modes and platform-specific parallelism limits. Never invent exact IDs from display labels or assume tiers map to fixed versions. Revalidate material runtime differences before execution. Never encode models, platforms, or mutable assignments in Plan Part filenames.
 
-Each GOAL entry identifies direct Luna ownership, parallel candidates, specialist triggers, delegation envelopes, integration, **batch-level validation boundaries**, the essential affected-test set and reusable prior evidence. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
+Each GOAL entry identifies primary-implementer ownership, parallel candidates, optional dual-tier specialist triggers, delegation envelopes, integration, **batch-level validation boundaries**, the essential affected-test set and reusable prior evidence. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
 
 ### Plan Parts
 
@@ -90,9 +90,9 @@ Filename/path describe stable work identity, not Luna/SOL assignment. A Plan Par
 - **essential** build/test/instrumentation procedures and objective Expected Evidence **at shared batch/GOAL validation boundaries**, not an automatic test per part;
 - a proposed specialist trigger and minimal context only when justified.
 
-**Default toward more useful implementation code, not less.** If ChatGPT has enough verified source and decisions to draft a correct implementation, provide it. Prefer code that can be adapted or implemented directly over prose describing what Luna should invent. Use precise pseudocode when exact source would require unverified APIs or would lock in an unjustified detail. Explain integration points, ownership, and assumptions. Code volume is not itself a goal: omit boilerplate, existing unchanged code, speculative unverified implementations, and irrelevant examples.
+**Default toward more useful implementation code, not less.** If ChatGPT has enough verified source and decisions to draft a correct implementation, provide it. Prefer code that can be adapted or implemented directly over prose describing what the primary implementer should invent. Use precise pseudocode when exact source would require unverified APIs or would lock in an unjustified detail. Explain integration points, ownership, and assumptions. Code volume is not itself a goal: omit boilerplate, existing unchanged code, speculative unverified implementations, and irrelevant examples.
 
-Be explicit about proposed names versus existing symbols. Avoid large *unchanged* source dumps and research transcripts; substantial **new implementation code** is encouraged. A longer, code-dense Plan Part is preferable to a short narrative that transfers difficult work to Luna.
+Be explicit about proposed names versus existing symbols. Avoid large *unchanged* source dumps and research transcripts; substantial **new implementation code** is encouraged. A longer, code-dense Plan Part is preferable to a short narrative that transfers difficult work to the primary implementer.
 
 ### CHAT_HANDOFF.md
 
@@ -126,7 +126,7 @@ Routine technical choices that follow an approved architecture can be resolved i
 
 ## 7. Decomposition and the bidirectional audit gate
 
-Decompose the approved master into coherent macroblocks, microsteps, dependencies, outputs, cross-domain contracts, and provisional neutral Plan Part paths. Preliminary roles are **Luna direct**, **Luna parallel**, **specialist candidate**, or **UNASSIGNED**.
+Decompose the approved master into coherent macroblocks, microsteps, dependencies, outputs, cross-domain contracts, and provisional neutral Plan Part paths. Preliminary roles are **primary direct**, **parallel worker**, **optional specialist candidate** (dual-tier only), or **UNASSIGNED**.
 
 At the **first completed decomposition**, persist the index and stop for a user checkpoint even if Continuous Mode is enabled. This checkpoint allows review of broad scope before detailed expansion. One subsequent user continuation authorizes the audit and following approved planning work; it is not a demand to approve every microstep.
 
@@ -155,7 +155,7 @@ For each substantial Plan Part:
 
 ### Code-first planning policy
 
-ChatGPT should do as much of the hard coding and algorithm design as is safely possible **during planning**. A rich Plan Part may include multiple proposed functions or implementation fragments, not merely headings and short bullet points. Proactively add code when it eliminates Luna implementation decisions or likely specialist calls. Check proposed code against current types, APIs, ownership and surrounding call sites; label unverified fragments explicitly and replace invented APIs with precise integration contracts or pseudocode.
+ChatGPT should do as much of the hard coding and algorithm design as is safely possible **during planning**. A rich Plan Part may include multiple proposed functions or implementation fragments, not merely headings and short bullet points. Proactively add code when it eliminates implementation decisions for economical primary models or avoids likely specialist calls. Check proposed code against current types, APIs, ownership and surrounding call sites; label unverified fragments explicitly and replace invented APIs with precise integration contracts or pseudocode.
 
 Prioritize **(1) correctness and applicable contracts, (2) code/pseudocode completeness for difficult behavior, (3) clear integration instructions, (4) concise explanatory prose**. Do not optimize for low line counts at the expense of useful code. No arbitrary minimum code quota; never pad with boilerplate or rewrite working unchanged source simply to enlarge a plan.
 
@@ -250,7 +250,7 @@ Each dispatch must contain **only**:
 
 Do not forward complete chat histories, whole plans, unrelated modules, large logs, or raw research. Source references should be precise enough that a subagent does not need to rediscover ownership.
 
-**Progressive context:** the subagent requests the specific additional file, symbol, or evidence and explains why its current packet is insufficient. Luna may approve necessary operational expansion **within previously approved architectural and permission boundaries**. If approval would change architecture, unrelated write scope, security posture, or user authorization, stop and escalate to the user/ChatGPT.
+**Progressive context:** the subagent requests the specific additional file, symbol, or evidence and explains why its current packet is insufficient. The primary implementer may approve necessary operational expansion **within previously approved architectural and permission boundaries**. If approval would change architecture, unrelated write scope, security posture, or user authorization, stop and escalate to the user/ChatGPT.
 
 A scope instruction is **not enforced filesystem isolation**. Agents may share tools, permissions, and workspace. Use actual sandbox/worktrees or external enforcement when strict isolation is required. Hooks may optionally add defense in depth after validation; do not claim they enforce all tool paths.
 
@@ -258,7 +258,7 @@ Subagent returns are compact and actionable: root cause or result, precise chang
 
 ## 12. Parallelism, file ownership, and integration
 
-The primary Luna decides whether parallelism actually improves the mission. Parallel work is useful for disjoint subsystems, independent investigations, or independent read-only reviews; trivial or tightly coupled tasks remain direct.
+The active primary implementer decides whether parallelism actually improves the mission. Parallel work is useful for disjoint subsystems, independent investigations, or independent read-only reviews; trivial or tightly coupled tasks remain direct.
 
 Before spawning workers, record:
 1. Dependency prerequisites and immutable upstream contracts.
@@ -269,7 +269,7 @@ Before spawning workers, record:
 
 Read-only exploration can overlap widely if useful. Write tasks require non-conflicting ownership and compatible shared resources. Different source files do **not** automatically mean independent tasks. Where practical, use isolated worktrees/branches for writes that cannot safely share a workspace; otherwise serialize.
 
-Workers do not independently redesign architecture, modify another worker's files, overwrite user edits, or create unrelated commits. Prefer the primary Luna to integrate, review diffs, run integration tests, and produce coherent commits. If a worker fails, retain validated independent progress and repair the relevant boundary, not the whole GOAL.
+Workers do not independently redesign architecture, modify another worker's files, overwrite user edits, or create unrelated commits. Prefer the active primary implementer to integrate, review diffs, run integration tests, and produce coherent commits. If a worker fails, retain validated independent progress and repair the relevant boundary, not the whole GOAL.
 
 ## 13. Planned and dynamic specialist escalation
 
@@ -277,17 +277,17 @@ Default: the selected profile's primary agent implements from the ChatGPT plan. 
 
 ### Planned escalation
 
-A Plan Part/GOAL may authorize a specialist for a narrowly defined difficult fragment with prerequisite evidence, minimal input contract, permitted model/effort, allowed reads/writes, and expected return. If the plan itself makes the fragment mechanical for Luna, remove the escalation in Pass B.
+A Plan Part/GOAL may authorize a specialist for a narrowly defined difficult fragment with prerequisite evidence, minimal input contract, permitted model/effort, allowed reads/writes, and expected return. If the plan itself makes the fragment mechanical for the economical primary implementer, remove the escalation in Pass B.
 
 ### Dynamic escalation
 
 When the active primary agent in a **dual-tier profile** hits a blocker:
 1. Classify ordinary build/test error, missing evidence, plan defect, platform/permission boundary, or genuinely difficult reasoning.
 2. Perform bounded diagnosis and materially different repairs using available plan/source evidence; do not require a fixed number of artificial retries.
-3. Escalate only when a durable blocker remains or the problem is demonstrably too difficult to solve safely at Luna's capability.
+3. Escalate only when a durable blocker remains or the problem is demonstrably too difficult to solve safely at the active primary model's capability.
 4. Send a minimal packet with repro, observed evidence, bounded attempts, and exact contract. Do not recreate the entire failed investigation.
-5. Prefer **Solve Only**: specialist diagnoses and returns a precise patch/algorithm/contracts for Luna to implement and test.
-6. Use **Scoped Implementation** only when Luna demonstrably cannot reliably implement the fragment; restrict changes to explicitly allowed paths and integrate through Luna.
+5. Prefer **Solve Only**: specialist diagnoses and returns a precise patch/algorithm/contracts for the primary implementer to apply and test.
+6. Use **Scoped Implementation** only when the primary implementer demonstrably cannot reliably implement the fragment; restrict changes to explicitly allowed paths and integrate through the primary.
 7. If the result fails, provide only the **new evidence** to the same specialist when available; avoid an unbounded chain of fresh expensive agents.
 
 No specialist may unilaterally alter approved architecture, ownership, safety constraints, authorization scope, or a foundational contract. For a real plan contradiction, pause the affected dependent work and return to ChatGPT/user for an approved correction. In **single-model mode**, use bounded primary-agent diagnosis; if it cannot progress, checkpoint and request an approved change instead of silently invoking a stronger tier. Avoid indefinite retries, busy waiting, and silent fallbacks.
