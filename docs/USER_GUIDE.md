@@ -1,12 +1,12 @@
 # User Guide — AN-chatNcodex-SubAgents-WorkFlow
 
-This is the practical entry point for using the [canonical workflow](WORKFLOW.md) in an existing software repository.
+This is the practical entry point for using the [canonical workflow](WORKFLOW.md) in an existing software repository, with **portable execution across Codex and Google Antigravity**.
 
 ## What this project does
 
-ChatGPT performs architecture and implementation planning. Codex uses a **Luna High primary agent as orchestrator and implementer**. It delegates worthwhile independent tasks to Luna workers and calls a stronger specialist (for example SOL High) only for proven hard problems, with a minimal context packet.
+ChatGPT performs architecture and **code-rich** implementation planning. The selected platform uses a primary agent as **orchestrator and implementer**: Codex may use Luna High, and Antigravity may use a verified Gemini Flash Medium-class model. Choose **dual-tier mode** (economical primary/workers plus optional stronger specialist) or **single-model mode** (same model for primary and parallel workers, no stronger tier).
 
-The goal is end-to-end implementation of an approved GOAL **without manually switching models**. Agent creation, permissions, and routing must be verified before execution.
+The goal is end-to-end implementation of an approved GOAL without unnecessary model switches. When the user moves between platforms, the next agent resumes from a **portable execution checkpoint**, not the prior chat transcript. Agent configuration, permissions, and effective routing must be verified on each platform.
 
 ## 1. Choose repositories
 
@@ -28,10 +28,10 @@ Read the current canonical workflow at:
 https://github.com/Armoredweb/AN-chatNcodex-SubAgents-WorkFlow/blob/main/docs/WORKFLOW.md
 
 ChatGPT owns difficult architecture, repository inspection, research,
-decomposition, Plan Parts, audits, model/agent routing plans, and
-convergence review. Codex Luna High executes approved GOALs and
-delegates only when worthwhile. Require minimal context for every
-subagent and do not use manual ACTIVE_MODEL switching.
+decomposition, Plan Parts, audits, platform-specific agent profiles,
+and convergence review. Codex or Antigravity executes approved GOALs
+from IMPLEMENTATION_HANDOFF.md. Delegate only when worthwhile.
+Require minimal context; do not use manual ACTIVE_MODEL switching.
 
 Treat current source and approved architecture as authoritative;
 do not trust chat memory over current GitHub files.
@@ -69,36 +69,37 @@ For substantial Plan Parts, ChatGPT should provide **as much verified, directly 
 - **Pass B:** specialist minimization, Luna routing, and worthwhile parallelism;
 - **Pass C:** cross-plan, current-source, and multi-agent consistency.
 
-It then produces the `CODEX_HANDOFF.md` GOAL execution contract. No specialist should be scheduled merely because a task looks intimidating.
+It then produces the platform-neutral `IMPLEMENTATION_HANDOFF.md` GOAL contract and initial execution checkpoint. Existing `CODEX_HANDOFF.md` files may be migrated as read-only compatibility pointers. No specialist should be scheduled merely because a task looks intimidating.
 
-## 4. Confirm models, then bootstrap Codex
+## 4. Select the platform/profile and bootstrap its agents
 
-The final index/handoff names **exact model IDs, versions, effort, roles, allowed fallback, and verification date**. Role labels alone are insufficient; model availability varies by client and account.
+The approved index and `IMPLEMENTATION_HANDOFF.md` define the same GOALs and Expected Evidence for every platform. A **per-platform Agent Capability Matrix** records actual model IDs/effort where supported, or verified UI model label plus tier (not a fabricated pinned ID). The user selects **Codex or Antigravity**, then **dual-tier or single-model** mode.
 
-Start Codex in the **consumer repository** and explicitly request the approved Agent Bootstrap/Compatibility Gate before starting G01. Example:
+For Codex: the primary Luna High can bootstrap `.codex/config.toml` and the necessary `.codex/agents/*.toml` roles, respecting existing files.
+
+For Antigravity: select a compatible model such as **Gemini Flash Medium** in the installed App/CLI model selector; bootstrap only needed `.agents/agents/*.md` roles (Markdown + YAML). Their documented `model: flash | pro | inherit` values are **tiers**, not fixed model IDs. Antigravity can use shared `AGENTS.md`. Do **not** use deprecated legacy `.agents/workflows/` for new automation; reusable skills may live in `.agents/skills/` when actually needed.
+
+Start in the consumer repository with a bounded first command:
 
 ~~~text
-Read CODEX_HANDOFF.md and the relevant PLAN_INDEX.md sections.
-Verify repository/HEAD, client/version, current config and AGENTS.md.
-Run Agent Bootstrap and Compatibility Gate ONLY.
-Create or merge the approved .codex/agents definitions and config;
-preserve all unrelated existing settings and user changes.
-Verify model/effort routing and minimal-context delegation.
-If a new session is required, checkpoint and tell me what to do next.
-Do not begin implementation GOALs until compatibility is proven.
+Read plans/<plan-name>/IMPLEMENTATION_HANDOFF.md and PLAN_INDEX.md.
+Run the Agent Bootstrap and Compatibility Gate ONLY for the selected
+platform and approved single-model or dual-tier profile.
+Inspect current branch/HEAD, dirty files and existing configs; preserve
+all user work and the other platform's agent definitions.
+Verify the actual model/tier, subagent invocation, permissions and tools.
+Checkpoint any required session restart. Do not start the GOAL yet.
 ~~~
 
-This may add a compact `AGENTS.md` and relevant project-local `.codex/config.toml` and `.codex/agents/*.toml` files in the **consumer** repository, subject to approved scope.
-
-A static TOML file is not proof that the configured specialist model really ran. Validate the installed client and actual role invocation. If a required feature is unavailable, report it rather than silently changing models.
+Do not infer that a configured role successfully uses a chosen model solely from the existence of TOML/YAML. If a required capability is missing, select only an explicitly approved verified fallback or stop.
 
 ## 5. Execute a GOAL
 
 After compatibility is verified, start the approved GOAL:
 
 ~~~text
-Start GOAL G01 from the current CODEX_HANDOFF.md.
-Luna is the primary orchestrator and implementer.
+Start GOAL G01 from the current IMPLEMENTATION_HANDOFF.md.
+Use the verified primary implementer for my selected platform/profile.
 Implement substantial coherent slices directly from prepared code;
 delegate only useful independent work or justified hard blockers.
 Test the essential integrated batch/GOAL outcomes, not every Plan Part.
@@ -109,21 +110,37 @@ Stay inside approved architecture and write scope.
 Do not ask me to switch models during the GOAL.
 ~~~
 
-Luna implements larger coherent slices, optionally uses independent Luna workers, escalates a verified hard problem in **Solve Only** mode first, and validates at meaningful boundaries. Earlier tests are limited to foundational or high-risk dependencies. Passing results are not repeatedly rerun unless the tested area or relevant dependencies/environment changed. A specialist can request specific additional context; Luna authorizes it only within already-approved limits.
+The primary implements larger coherent slices, optionally uses independent workers of the selected model, and escalates a verified hard problem in **Solve Only** mode only under a dual-tier profile. In single-model mode it must not invent an expensive specialist. Validate at meaningful boundaries. Earlier tests are limited to foundational or high-risk dependencies. Passing results are not repeatedly rerun unless the tested area or relevant dependencies/environment changed. A specialist can request specific additional context; Luna authorizes it only within already-approved limits.
 
 GOALs may require a user action if the client must resume a paused session, request genuine permission, or resolve an architectural blocker. These are not manual model switches.
 
-## 6. Check completion and close the cycle
+## 6. Switch platforms mid-GOAL, then complete and close the cycle
+
+When usage capacity is unavailable or you want to change providers, stop concurrent writers and preserve the code plus a **compact** `IMPLEMENTATION_HANDOFF.md` checkpoint: repository/HEAD and dirty files, current GOAL, completed and remaining integrated slices, last still-valid tests, active subagents/worktrees/conflicts, chosen next profile and one exact next action. A checkpoint alone cannot transport uncommitted files to another computer; use the same working tree or an explicit commit/patch.
+
+The user opens the other platform in the same consumer project and resumes with:
+
+~~~text
+Continue the approved GOAL from plans/<plan-name>/IMPLEMENTATION_HANDOFF.md.
+Check real HEAD and uncommitted changes, ownership of any active writers,
+completed work and tests still valid. Run the incoming platform's
+Compatibility Gate, then continue only the next remaining slice.
+Keep the plan and scope unchanged. Do not replay previous chat history.
+~~~
+
+A sudden limit can prevent the outgoing agent from updating its final checkpoint. The incoming agent must reconcile the last persisted checkpoint with the actual code and mark uncertain work as unverified, not discard or duplicate it. Switching is **user-initiated** and subject to each provider's rules; neither platform's in-memory session transfers automatically.
+
+### Completion and closure
 
 For each GOAL request a compact Execution Evidence summary: changed files, verified model routing when observable, subagent calls, tests, Expected Evidence results, and real blockers. Do not invent token counts.
 
-After implementation, return to ChatGPT for a **Convergence Check** against the approved baseline and current code. ChatGPT prepares cleanup only after convergence. Explicitly start the bounded **Cleanup GOAL** when ready; cleanup is never automatic.
+After implementation, return to ChatGPT for a **Convergence Check** against the approved baseline and current code. ChatGPT prepares platform-neutral cleanup only after convergence, under `CLEANUP_HANDOFF.md`. Explicitly start the bounded **Cleanup GOAL** on a verified platform when ready; cleanup is never automatic.
 
 ## 7. Continuation and safety
 
 At a new chat, read the current manual and smallest necessary persisted files: `PROJECT.md`, `CHAT_HANDOFF.md`, `MASTER_PLAN.md`, `PLAN_INDEX.md`, then only relevant parts. Use the current GitHub source instead of remembered state.
 
-ChatGPT **Manual Mode** performs one coherent substantial operation per message; **Continuous Mode** is opt-in, risk-based, and does not use an arbitrary 12-operation countdown. Handoffs carry the exact baseline, phase, next action, blockers, and file pointers without transcripts.
+ChatGPT **Manual Mode** performs one coherent substantial operation per message; **Continuous Mode** is opt-in and risk-based. Use `CHAT_HANDOFF.md` for **planning-chat** continuity and `IMPLEMENTATION_HANDOFF.md` for **cross-platform implementation** continuity. Never substitute an old agent transcript for current Git state.
 
 Respect platform, security, usage, and authorization limits. Minimal-context instructions are not a true filesystem sandbox; separate technical isolation may be required.
 

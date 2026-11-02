@@ -1,14 +1,14 @@
 # Guia de uso — AN-chatNcodex-SubAgents-WorkFlow
 
-Este é o guia prático para aplicar o [workflow canônico](WORKFLOW.md) a um repositório de software existente.
+Este é o guia prático para aplicar o [workflow canônico](WORKFLOW.md) a um repositório de software existente, incluindo **continuidade entre Codex e Google Antigravity**.
 
 ## Objetivo
 
 O **ChatGPT realiza o planejamento técnico pesado**: lê o código, decide a arquitetura, detalha contratos e algoritmos, escreve pseudocódigo/código útil, organiza as dependências e verifica consistência.
 
-No Codex, **Luna High atua como orquestrador e implementador principal**. Ele implementa diretamente sempre que possível. Subagentes Luna executam tarefas independentes somente quando o paralelismo compensa; um especialista mais capaz (como SOL High) recebe apenas dificuldades justificadas e contexto mínimo.
+Na plataforma selecionada, o agente principal **orquestra e implementa**. O Codex pode usar Luna High; o Antigravity pode usar Gemini Flash Medium, após verificar o modelo disponível. Há dois modos: **duas capacidades** (principal barato, trabalhadores paralelos e especialista forte opcional) e **modelo único** (principal e subagentes paralelos no mesmo modelo, sem especialista forte obrigatório).
 
-A meta é concluir cada GOAL autonomamente **sem troca manual de modelos**.
+A meta é concluir cada GOAL autonomamente e permitir que o usuário **troque de plataforma no meio da implementação**, continuando do estado salvo, sem copiar histórico de conversas.
 
 ## 1. Identifique os repositórios
 
@@ -30,9 +30,9 @@ Leia sempre a versão atual do workflow canônico:
 https://github.com/Armoredweb/AN-chatNcodex-SubAgents-WorkFlow/blob/main/docs/WORKFLOW.md
 
 ChatGPT é responsável por arquitetura, inspeção de código, pesquisa,
-decomposição, Plan Parts, auditorias, planejamento de subagentes e
-convergência. Codex Luna High implementa os GOALs aprovados e delega
-somente quando houver benefício comprovado.
+decomposição, Plan Parts, auditorias, perfis por plataforma e
+convergência. Codex ou Antigravity implementa GOALs aprovados
+usando IMPLEMENTATION_HANDOFF.md e delega apenas quando compensar.
 
 Exija Minimal Context Delegation; não use ACTIVE_MODEL manual.
 Dê prioridade ao repositório atual e à arquitetura aprovada, nunca à
@@ -67,39 +67,40 @@ Após a primeira decomposição e criação do índice, ocorre uma pausa obrigat
 
 A expansão deve priorizar **o máximo de código de implementação correto e útil que o ChatGPT conseguir produzir**, incluindo funções, interfaces, tratamento de erros, integração e pseudocódigo detalhado. Plan Parts maiores e ricos em código são desejáveis quando economizam raciocínio da Luna. Não reduzir código útil para deixar os planos pequenos. Planejar **poucos testes essenciais por lote/GOAL**, sem exigir teste para cada Plan Part.
 
-Antes do handoff ao Codex, o ChatGPT executa:
+Antes do handoff portátil de implementação, o ChatGPT executa:
 - **Pass A:** otimização sem perder informações necessárias;
 - **Pass B:** redução de chamadas a especialistas e análise do paralelismo;
 - **Pass C:** consistência entre arquitetura, índice, Plan Parts, subagentes e código real.
 
-## 4. Bootstrap e compatibilidade do Codex
+## 4. Escolha a plataforma e configure os agentes
 
-O índice e o handoff devem registrar **IDs/versões exatos dos modelos**, esforço, funções, alternativas autorizadas e verificações efetuadas. Não basta escrever somente “Luna” ou “SOL”.
+O planejamento cria `IMPLEMENTATION_HANDOFF.md` como **contrato e checkpoint portátil**. O PLAN_INDEX mantém a matriz de capacidades por plataforma, modelos exatos quando a interface permite, esforço, funções, paralelismo e limitações verificadas. Você escolhe **Codex ou Antigravity** e o modo **duas capacidades** ou **modelo único**.
 
-Inicie Codex no repositório consumidor e solicite **somente** o bootstrap inicialmente:
+No **Codex**, Luna High pode configurar `.codex/config.toml` e os agentes necessários em `.codex/agents/*.toml`.
+
+No **Antigravity**, selecione no cliente um Gemini Flash Medium disponível ou outro modelo verificado. Os subagentes personalizados ficam em `.agents/agents/*.md`, com YAML frontmatter. O campo documentado `model: flash | pro | inherit` escolhe uma categoria, não necessariamente uma versão fixa. O `AGENTS.md` pode ser compartilhado. Não criar novos mecanismos na pasta legada `.agents/workflows/`; skills reutilizáveis são opcionais.
+
+Execute apenas o bootstrap primeiro:
 
 ~~~text
-Leia CODEX_HANDOFF.md e as seções relevantes de PLAN_INDEX.md.
-Confirme repositório/HEAD, versão do Codex, AGENTS.md e configurações.
-Execute apenas Agent Bootstrap e Compatibility Gate.
-Crie ou integre as configurações aprovadas em .codex/agents/
-e .codex/config.toml, preservando arquivos e ajustes existentes.
-Verifique os modelos reais, esforços, ferramentas, permissões
-e delegação com contexto mínimo. Não inicie os GOALs ainda.
-Se precisar de uma nova sessão, registre o checkpoint e informe.
+Leia plans/<nome-do-plano>/IMPLEMENTATION_HANDOFF.md e PLAN_INDEX.md.
+Execute somente Agent Bootstrap e Compatibility Gate da plataforma
+e do perfil selecionados. Verifique HEAD, alterações locais,
+modelos efetivos, permissões e subagentes. Preserve arquivos
+existentes e configurações da outra plataforma.
+Registre limitações e eventual necessidade de nova sessão.
+Não inicie o GOAL ainda.
 ~~~
 
-Quando autorizado e necessário, o bootstrap poderá criar `AGENTS.md`, `.codex/config.toml` e agentes em `.codex/agents/` no **repositório consumidor**.
-
-Arquivo TOML válido não prova que o cliente realmente usou o modelo pretendido. O Compatibility Gate deve testar a configuração e registrar limitações. Se SOL não estiver disponível, não substitua silenciosamente.
+Não confunda TOML/YAML válido com confirmação de que o modelo correto foi utilizado. Alternativas só podem ser usadas quando aprovadas e verificadas.
 
 ## 5. Execute o GOAL
 
 Depois de validar o ambiente:
 
 ~~~text
-Inicie o GOAL G01 do CODEX_HANDOFF.md atual.
-Luna é o orquestrador e implementador principal.
+Inicie o GOAL G01 do IMPLEMENTATION_HANDOFF.md atual.
+Use o agente principal verificado da plataforma/perfil selecionados.
 Implemente grandes partes coerentes com o código dos planos.
 Delegue só tarefas independentes úteis ou bloqueios comprovados,
 sempre com contexto mínimo e limites explícitos.
@@ -112,23 +113,40 @@ Respeite arquitetura e arquivos autorizados.
 Não solicite trocas manuais de modelo durante o GOAL.
 ~~~
 
-Luna implementa lotes coerentes e corrige falhas normais sem escalonar imediatamente. Testes antecipados ficam reservados a contratos fundamentais ou riscos altos. Testes anteriormente aprovados só devem ser repetidos quando o código coberto, suas dependências relevantes ou o ambiente/configuração mudarem; após uma correção, executar apenas os testes impactados. Quando necessário, chama SOL preferencialmente em modo **Solve Only** (solução para Luna aplicar). **Scoped Implementation** é permitido para um fragmento realmente difícil de implementar.
+O agente principal implementa lotes coerentes e corrige falhas normais sem escalonar imediatamente. Testes antecipados ficam reservados a contratos fundamentais ou riscos altos. Testes anteriormente aprovados só devem ser repetidos quando o código coberto, suas dependências relevantes ou o ambiente/configuração mudarem; após uma correção, executar apenas os testes impactados. No modo de duas capacidades, pode chamar um especialista forte em **Solve Only**, ou **Scoped Implementation** quando indispensável. No modo de modelo único não deve chamar um modelo mais caro sem nova autorização.
 
 O especialista pode solicitar arquivos adicionais específicos e justificar a necessidade; Luna só autoriza ampliação operacional dentro dos limites já aprovados.
 
 Pausas podem ocorrer por permissões, limitações da plataforma, nova sessão necessária ou decisão arquitetural genuína. Retomar uma sessão pausada não é o mesmo que trocar manualmente de modelo.
 
-## 6. Validação e encerramento
+## 6. Troca de plataforma, validação e encerramento
+
+Se uma plataforma atingir seu limite ou você preferir outra, a execução deve preservar um checkpoint pequeno em `IMPLEMENTATION_HANDOFF.md`: GOAL atual, partes concluídas e pendentes, HEAD/alterações locais, testes ainda válidos, integrações e subagentes pendentes, bloqueios e próximo passo exato. É necessário interromper trabalhos concorrentes ou registrar explicitamente os que não foram integrados.
+
+Na nova plataforma, abra o mesmo projeto/repositório e use:
+
+~~~text
+Continue o GOAL aprovado a partir de
+plans/<nome-do-plano>/IMPLEMENTATION_HANDOFF.md.
+Verifique HEAD, alterações locais, responsáveis por escritas,
+partes concluídas, pendências e testes ainda válidos.
+Valide o perfil de agentes desta plataforma e implemente
+somente os passos restantes, sem repetir o histórico.
+~~~
+
+Se o limite interromper a sessão abruptamente, o último checkpoint pode estar incompleto; o novo agente compara o arquivo com o código real antes de continuar. Alterações sem commit **não viajam entre computadores** por causa de um handoff: é preciso o mesmo diretório, commit ou patch explícito. A troca depende da sua ação e respeita os limites e permissões de cada serviço.
+
+### Validação final
 
 Ao concluir um GOAL, Luna apresenta evidências objetivas: arquivos alterados, integrações, testes, Expected Evidence, chamadas a subagentes e limitações. Números de tokens e modelo realmente utilizado só devem ser relatados quando houver dados confiáveis.
 
-O ChatGPT faz o **Convergence Check**, comparando código real e requisitos aprovados. Após convergência, prepara o `CODEX_CLEAN_HANDOFF.md`. A limpeza exige **novo início explícito** do usuário; não é automática.
+O ChatGPT faz o **Convergence Check**, comparando código real e requisitos aprovados. Após convergência, prepara o `CLEANUP_HANDOFF.md` portátil. A limpeza exige **novo início explícito** do usuário, na plataforma compatível escolhida; não é automática.
 
 ## 7. Continuidade e segurança
 
 Em um novo chat, leia o manual e os arquivos atuais necessários (`PROJECT.md`, `CHAT_HANDOFF.md`, `MASTER_PLAN.md`, `PLAN_INDEX.md` e apenas Plan Parts relevantes). Nunca trate a memória como fonte de verdade.
 
-**Manual Mode:** uma operação substancial coerente por comando. **Continuous Mode:** execução opt-in com checkpoints e verificação de segurança do contexto, sem importar automaticamente a contagem antiga de 12 operações.
+**Manual Mode:** uma operação substancial coerente por comando. **Continuous Mode:** execução opt-in com checkpoints e verificação de segurança do contexto. `CHAT_HANDOFF.md` pertence à continuidade entre chats do planejamento; `IMPLEMENTATION_HANDOFF.md` pertence à continuidade real da implementação entre plataformas.
 
 A delegação com contexto mínimo **não é sandbox de arquivos**. Permissões reais, worktrees e outras medidas técnicas podem ser necessárias. Respeite limites de uso, segurança e autorização.
 

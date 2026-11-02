@@ -1,21 +1,22 @@
 # Canonical Workflow
 
-This file is the single operational authority for **AN-chatNcodex-SubAgents-WorkFlow**. It defines the protocol used by ChatGPT to plan changes in a consumer software repository and by Codex to execute approved implementation GOALs.
+This file is the single operational authority for **AN-chatNcodex-SubAgents-WorkFlow**. It defines the protocol used by ChatGPT to plan changes in a consumer software repository and by a **selected, compatible implementation platform** (initially Codex or Google Antigravity) to execute approved GOALs. Plans and execution checkpoints are platform-neutral; platform-specific agent files are adapters.
 
 The workflow repository defines the protocol; the consumer repository holds its own code, architecture, plans, and execution state. The Project Instructions used to **maintain this workflow** are not a substitute for the consumer-project protocol.
 
 ## 1. Purpose, boundaries, and operating principle
 
-**ChatGPT does the difficult thinking. Luna performs most implementation. Stronger specialists address only justified residual complexity using the minimum necessary context.**
+**ChatGPT does the difficult thinking. An economical primary agent performs most implementation. Stronger specialists address only justified residual complexity, using the minimum necessary context.**
 
-- ChatGPT owns architecture, research, source inspection, decomposition, detailed planning, consistency, specialist-minimization, approval preparation, convergence review, and cleanup preparation.
-- Codex runs a **Luna High primary agent that is both orchestrator and implementer**. It implements directly by default, delegates independent work to Luna workers only when beneficial, and escalates real hard blockers to a more capable specialist.
-- The workflow optimizes **implementation readiness and useful implementation code produced by ChatGPT**, shifting complex reasoning away from Codex. Favor code/pseudocode-rich plans over superficially short plans; minimize redundant prose and costly Codex rediscovery, not useful technical content.
+- ChatGPT owns architecture, research, source inspection, decomposition, detailed planning, consistency, specialist-minimization, approval preparation, convergence review, and cleanup preparation **independent of implementation platform**.
+- The selected platform runs a **primary agent that both orchestrates and implements**. For Codex, prefer Luna High; for Antigravity, a verified Gemini Flash Medium-class configuration is a candidate. These are profiles, not permanent model names.
+- Support both **dual-tier mode** (economical primary/parallel workers plus optional stronger specialist) and **single-model mode** (same selected model for primary and parallel workers, no stronger specialist configured or assumed). Direct implementation remains the default in either mode.
+- The workflow optimizes **implementation readiness and useful implementation code produced by ChatGPT**, shifting complex reasoning away from the implementation platform. Favor code/pseudocode-rich plans over superficially short plans; minimize redundant prose and expensive rediscovery, not useful technical content.
 - Execute **coherent implementation batches with few, high-value validation gates**; do not require a new test or a test run for every Plan Part or microstep.
 - A GOAL is an autonomous, bounded implementation mission; plan files do not define agent sessions, commits, or test boundaries.
 - This protocol never authorizes bypassing product, account, safety, rate, security, or platform limits. A subagent is not an authorization bypass.
 
-Do not assume that using more agents is faster or cheaper. Prefer direct implementation where the plan already supplies the solution.
+Do not assume that using more agents is faster or cheaper. Prefer direct implementation where the plan already supplies the solution. A user-authorized platform switch preserves approved scope, evidence, and progress; it does not authorize bypassing providers' usage policies or sharing credentials.
 
 ## 2. Authority and evidence precedence
 
@@ -62,7 +63,7 @@ Keep artifacts distinct; create a document only when its phase requires it. The 
 
 ### PROJECT.md
 
-Concise durable entry point: repository, branch/baseline, planning root/backend, authorized scope, phase, pointers to active artifacts, approved architecture baseline, and next responsible actor. No transcripts.
+Concise durable entry point: repository, branch/baseline, planning root/backend, authorized scope, phase, pointers to active artifacts (including the **portable implementation handoff** when applicable), approved architecture baseline, and next responsible actor. No transcripts.
 
 ### MASTER_PLAN.md
 
@@ -74,13 +75,13 @@ Preserve `backup/MASTER_PLAN.original.md` as immutable approved semantic baselin
 
 Dependency-oriented routing and traceability map: macroblocks, microsteps, ordered/parallel dependencies, Plan Part paths/status, cross-part invariants, Implementation Batches, GOALs, Expected Evidence, and an **Agent Capability Matrix**.
 
-The matrix records exact verified model IDs/versions, effort, client/version/verification date, the primary role, Luna worker roles, permitted specialists, accepted fallbacks, routing constraints, and blocked/unverified features. Revalidate material runtime differences before execution. Never encode mutable model choices in Plan Part filenames.
+The matrix is **platform-profiled**: for each supported platform, record primary, worker and optional specialist roles, exact model IDs/versions and effort **when the interface exposes them**, otherwise the verified selector name/tier and its resolution limitation; client/surface/version, verification date, permitted fallbacks, routing constraints, and unavailable features. Include `single-model` and `dual-tier` modes and platform-specific parallelism limits. Never invent exact IDs from display labels or assume tiers map to fixed versions. Revalidate material runtime differences before execution. Never encode models, platforms, or mutable assignments in Plan Part filenames.
 
 Each GOAL entry identifies direct Luna ownership, parallel candidates, specialist triggers, delegation envelopes, integration, **batch-level validation boundaries**, the essential affected-test set and reusable prior evidence. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
 
 ### Plan Parts
 
-Filename/path describe stable work identity, not Luna/SOL assignment. A Plan Part must be **code-forward**, with enough implementation-ready technical content for Luna to build mechanisms instead of reasoning them out again. Include, as relevant:
+Filename/path describe stable work identity, not Luna/SOL assignment. A Plan Part must be **code-forward**, with enough implementation-ready technical content for an economical primary implementer to build mechanisms instead of reasoning them out again. Include, as relevant:
 - Goal and **current-to-target** behavior, verified repo base and real paths/symbols;
 - fixed decisions, non-goals, invariants, types, state, ownership/lifetime, and contracts;
 - **substantial concrete source code, function bodies, interfaces, implementation skeletons, or detailed executable-style pseudocode** for non-trivial mechanisms, including algorithms, call sequences, data flow, and migration order;
@@ -97,15 +98,19 @@ Be explicit about proposed names versus existing symbols. Avoid large *unchanged
 
 Compact operational checkpoint: verified baseline, phase, last completed unit, remaining work, blockers/decisions, context-safety state, exact next action and minimum files to reload. Include continuous/manual-mode state if relevant. Do not use a running conversation transcript or stale operation counter as authority.
 
-### CODEX_HANDOFF.md
+### IMPLEMENTATION_HANDOFF.md — portable execution authority
 
-Final machine-facing implementation contract: verified repo/base, plan root/index, **approved exact Agent Capability Matrix**, bootstrap/compatibility requirements, ordered GOALs and foundational gates, scope and writes, delegation/parallel/escalation policy, validation and Expected Evidence, deviation reporting, and resume procedure.
+The **single canonical implementation handoff** for new planning cycles. It contains both:
+1. **Approved stable contract:** verified repo/base, plan root/index, platform-neutral GOAL order and foundational gates, approved Agent Capability Matrix (per-platform profiles and single/dual-tier modes), allowed writes, delegation, escalation and testing/Expected Evidence rules.
+2. **Compact mutable execution checkpoint:** active/last platform and selected model profile, current GOAL, completed and remaining coherent steps, active/pending work, exact code baseline and dirty working-tree provenance, relevant tests and evidence validity, pending integration/locks/worktrees, blockers, and **one precise next safe action**. Update this small section at meaningful checkpoints and before switching platforms, not for every microstep.
 
-Do **not** create or maintain a manual `ACTIVE_MODEL` switch variable. Planned model routing is configuration intent, not proof of active runtime model. Never silently rewrite a model selection based on history or an unverified agent report.
+`IMPLEMENTATION_HANDOFF.md` is the **sole portable source for current implementation state**. `PLAN_INDEX.md` owns the approved task graph; `CHAT_HANDOFF.md` owns ChatGPT conversation continuity. Never duplicate mutable implementation state in either. For pre-existing cycles, `CODEX_HANDOFF.md` may remain as a **read-only compatibility pointer** to the canonical portable handoff; migrate its active state once and avoid parallel authorities.
 
-### CODEX_CLEAN_HANDOFF.md and CLEANUP_FINDINGS.md
+Do **not** create or maintain a manual `ACTIVE_MODEL` switch variable. The active **platform/profile** recorded at a user-authorized handoff is a verified routing choice, not permission to change UI model selection or proof of the effective model. Never infer an active platform from stale chat or agent claims.
 
-After convergence, ChatGPT prepares a temporary, bounded Cleanup GOAL handoff: reconciliation rules, removal/preservation scope, build/cache policy, clean rebuild, and stop conditions. Luna executes it only after explicit user start. `CLEANUP_FINDINGS.md` is the concise surviving feedback artifact for real unresolved implementation divergences and durable architecture corrections, not a cleanup log.
+### CLEANUP_HANDOFF.md and CLEANUP_FINDINGS.md
+
+After convergence, ChatGPT prepares a temporary, bounded, platform-neutral Cleanup GOAL handoff: reconciliation rules, removal/preservation scope, build/cache policy, clean rebuild, and stop conditions. The selected compatible primary agent executes it only after explicit user start. An older `CODEX_CLEAN_HANDOFF.md` can be treated as a compatibility source during migration, not a second active authority. `CLEANUP_FINDINGS.md` is the concise surviving feedback artifact for real unresolved implementation divergences and durable architecture corrections, not a cleanup log.
 
 ## 6. Brainstorm and master-plan approval gate
 
@@ -154,7 +159,7 @@ ChatGPT should do as much of the hard coding and algorithm design as is safely p
 
 Prioritize **(1) correctness and applicable contracts, (2) code/pseudocode completeness for difficult behavior, (3) clear integration instructions, (4) concise explanatory prose**. Do not optimize for low line counts at the expense of useful code. No arbitrary minimum code quota; never pad with boilerplate or rewrite working unchanged source simply to enlarge a plan.
 
-**Implementation Readiness Self-Check:** Could a Luna High implementer use the included code/pseudocode directly, without reinventing hard algorithms, architecture, interfaces, ownership, concurrency, or sequencing? Have useful concrete implementations been omitted solely to keep the document short? Are repo facts and dependencies verified and batch-level acceptance evidence clear? Repair any material gap before marking expanded.
+**Implementation Readiness Self-Check:** Could a verified economical primary agent in **each supported platform profile** use the included code/pseudocode directly, without reinventing hard algorithms, architecture, interfaces, ownership, concurrency, or sequencing? Have useful concrete implementations been omitted solely to keep the document short? Are repo facts and dependencies verified and batch-level acceptance evidence clear? Repair any material gap before marking expanded.
 
 A file's line count is a **context-safety and maintainability indicator, not a brevity target**. The former ~1,200–1,600-line guidance may prompt a safety check, but a coherent, code-heavy file exceeding it is acceptable. Split by meaningful responsibility only when readability, dependencies, or context capacity require it; preserve complete implementation fragments and cross-part contracts.
 
@@ -164,17 +169,17 @@ After all required parts are expanded, perform the full gates in order. Checkpoi
 
 ### Pass A — implementation-preserving optimization
 
-Remove filler, outdated rationale, duplicated explanations, ambiguous choices, and avoidable planning left to Luna. **Increase actionable code density**: add missing concrete implementations, function bodies, algorithms, migration steps, race/error handling, and pseudocode where verified source permits. Do **not** compress or remove useful implementation code just to shrink the plan. Consolidate redundant test instructions into shared GOAL/batch validation without removing essential evidence or failure behavior.
+Remove filler, outdated rationale, duplicated explanations, ambiguous choices, and avoidable planning left to the economical primary agent. **Increase actionable code density**: add missing concrete implementations, function bodies, algorithms, migration steps, race/error handling, and pseudocode where verified source permits. Do **not** compress or remove useful implementation code just to shrink the plan. Consolidate redundant test instructions into shared GOAL/batch validation without removing essential evidence or failure behavior.
 
 ### Pass B — Specialist Minimization and Agent Routing
 
-Challenge **every** planned stronger-model call: can better source evidence, scope reduction, a concrete interface, algorithm, code snippet, or dependency resolution make Luna capable? Retain specialist calls only when a material residual difficulty remains. Decide **Solve Only** before **Scoped Implementation** unless the latter is clearly necessary.
+Challenge **every** planned stronger-model call: can better source evidence, scope reduction, a concrete interface, algorithm, code snippet, or dependency resolution make the economical primary agent capable? Retain specialist calls only when a material residual difficulty remains **in the selected dual-tier profile**. A single-model profile has no automatic stronger-model escalation; a true capability blocker requires explicit user approval to change mode/profile/platform. Decide **Solve Only** before **Scoped Implementation** unless the latter is clearly necessary.
 
 Audit parallel slices for genuine independence, coordination cost, shared state, file ownership, and integration ordering. No automatic one-part-one-subagent or one-part-one-test mapping.
 
 ### Pass C — Cross-artifact Consistency Gate
 
-Audit `MASTER_PLAN → PLAN_INDEX → Plan Parts → current repository` in both directions for requirements, interfaces, states, ownership, contracts, dependencies, migration, tests, and approved decisions. Add cross-agent checks: exact model routing, delegation inputs/outputs, allowed reads/writes, concurrent writes, integration, specialist permissions, and Expected Evidence.
+Audit `MASTER_PLAN → PLAN_INDEX → Plan Parts → current repository` in both directions for requirements, interfaces, states, ownership, contracts, dependencies, migration, tests, and approved decisions. Add cross-agent checks: **platform-neutral contracts**, profile-specific effective model/tier routing, delegation inputs/outputs, allowed reads/writes, concurrent writes, integration, specialist permissions, **cross-platform checkpoint/resume**, and Expected Evidence.
 
 Repair contradictions in the **owning canonical artifact** (architecture → master, decomposition/routing → index, mechanism → part), propagate downstream, then repeat until a complete clean pass or real blocker. Do not hide contradictions by patching handoffs alone.
 
@@ -182,42 +187,57 @@ Repair contradictions in the **owning canonical artifact** (architecture → mas
 
 Build meaningful Implementation Batches; mark foundational GOALs whose evidence gates dependent work. A GOAL may reference many Plan Parts. For each GOAL include:
 - bounded mission, current-to-target delta, dependencies, authorized modifications;
-- Luna direct steps, optional independent worker tasks and ownership;
-- justified specialist triggers and smallest initial delegation packet;
+- direct primary-agent steps, optional independent worker tasks and ownership;
+- justified specialist triggers and smallest initial delegation packet **only in a supported dual-tier profile**;
 - integration sequence, rollback/recovery rules, **a substantial implementation batch followed by few essential tests at its meaningful boundary**, and Expected Evidence. Include earlier tests only for justified risk/foundational gates; identify which previously passing checks remain valid unless affected code/dependencies change.
 
-Confirm capability matrix and compatibility/bootstrap obligations, then persist `CODEX_HANDOFF.md`. The user explicitly starts the Codex implementation; planning approval is not implementation-start authorization.
+Confirm the per-platform capability matrix and compatibility/bootstrap obligations, then persist `IMPLEMENTATION_HANDOFF.md` as the shared execution contract and initial checkpoint. The user explicitly selects a platform/profile and starts implementation; planning approval is not implementation-start authorization.
 
-## 10. Models, configuration, and actual capability checks
+## 10. Platform profiles, agent configuration, and compatibility
 
-**Planning must record exact identifiers and effort.** Role names stay independent from model names. The intended default is **Luna High primary**, optionally **Luna High workers**, with **SOL High** or another verified stronger model for exceptional work.
+**Plan once; adapt execution per platform.** Keep roles independent of vendor/model names. The supported baseline platforms are **Codex** and **Google Antigravity**, with room for future adapters after research and validation. User selects one platform/profile for a running session; moving between profiles is explicit and checkpoint-driven.
 
-As of the cited documentation snapshot, example Codex identifiers include `gpt-6-luna` and `gpt-6.1-sol`. Examples are **not permanent guarantees** of account availability, client routing, or effort support. Verify official docs during planning, record the date/client, and verify the installed runtime before GOAL execution. No silent model downgrade or substitution.
+### Runtime role profiles
 
-Current Codex documentation describes project-local agent role definitions under `.codex/agents/*.toml` and project configuration in `.codex/config.toml`, including `[agents]` keys for default subagent model/effort and a concurrency cap. The primary session's model must also be explicitly confirmed using supported session/client mechanisms.
+- **Dual-tier:** economical primary implementer and economical parallel workers, with an optional stronger specialist used only for justified hard problems. Codex candidate: Luna High primary/workers and SOL High specialist. Antigravity candidate: a verified **Gemini Flash Medium**-class primary/parallel configuration and a verified more capable model/tier for specialists.
+- **Single-model:** one verified model for the primary implementer **and workers**. Parallelism may use clones or explicitly configured same-model agents; no specialist tier is assumed. If a genuinely difficult fragment exceeds this profile, return a blocker or request explicit approval for a profile/platform change.
+- **Model identifiers:** Plan exact IDs/versions and reasoning effort **when supported by the surface**. Otherwise record the exact UI label, tier, available effort, and `effective_model_unverified` rather than inventing an ID. A named Gemini Flash variant can change; verify current available models and user entitlements at bootstrap.
 
-### Agent Bootstrap and Compatibility Gate
+The stable Plan Parts must not depend on platform tools, prompt syntax, agent IDs, vendor-specific model strengths, or live session state. The capability matrix describes how the same GOAL is executed on each platform.
 
-Codex performs this bounded setup **before** starting implementation GOALs:
-1. Verify consumer repo, branch/HEAD, plan files, current Codex client/version, workspace trust, and existing `AGENTS.md`, `.codex/config.toml`, and `.codex/agents/`. Preserve existing instructions and uncommitted changes.
-2. Confirm model identifiers, availability/entitlements, accepted reasoning efforts, tool interface, features, sandbox/approval configuration, and client support for custom roles.
-3. Create or merge **only the approved, necessary** project-local agent definitions; never replace user config wholesale or create unused roles. Add a compact `AGENTS.md` only when approved, limited to durable Codex operating guidance, while specific GOAL facts remain in handoff/index.
-4. Set a conservative worker concurrency ceiling (often 2–3 workers initially; never assume a universal optimum). Prefer Luna defaults; explicitly specify specialists' models and reasoning effort. Do not confuse default settings with verified effective routing.
-5. Validate parsing/discovery, perform a **minimal test invocation** for each required role, and confirm the actual model/effort from reliable client evidence where available. Verify necessary tools still work with minimal-context delegation and that permission constraints are understood.
-6. If discovery requires a new session, stop bootstrap at a durable checkpoint and have the user start/resume in a fresh session; then verify again **before** beginning the GOAL. No manual mid-GOAL model switching.
-7. Record verified outcomes, configuration paths, client version, limitations, and any blocked role in the implementation handoff. Recheck after a material update to client, models, session, or config, not before every trivial task.
+### Codex adapter
 
-If effective specialist routing cannot be confirmed, do **not** claim SOL ran or silently use Luna instead. Stop only the dependent operation, try an explicitly approved compatible alternative if verified, or report a real boundary. Feature availability varies by client and version.
+Codex uses project-local `.codex/agents/*.toml`, relevant `.codex/config.toml` agent settings, and applicable `AGENTS.md`. Verify workspace trust, model/effort support, discovery and spawn routing in the actual CLI/IDE/App; examples such as `gpt-6-luna` and `gpt-6.1-sol` are version-sensitive, not guarantees. Prefer context-clean subagent spawning when supported and verified; follow §11 for minimal delegation.
 
-### Configuration precedence and instruction discovery
+### Antigravity adapter
 
-Read applicable global/project `AGENTS.md`/`AGENTS.override.md` and Codex settings rather than overwriting them. Project-local configuration may depend on workspace trust. `AGENTS.md` instructions do not grant new filesystem permissions. A custom agent TOML controls the role; it does not by itself sandbox writes.
+Official Antigravity App/CLI docs (checked 2026-11-02) describe workspace custom subagents in `.agents/agents/<name>.md` or `.agents/agents/<name>/agent.md`, Markdown with YAML frontmatter. The documented **subagent** `model` field accepts `inherit`, `flash`, or `pro`: these are **tiers**, not pinned underlying model/version IDs. The actual primary model and thinking level are selected through the supported client model selector; confirm and record its effective label. Current available models include Flash Medium options; availability changes by account, surface and date.
 
-Before treating documented settings as supported in a given environment, inspect the actual installed client's help/config/schema and test the exact role.
+Antigravity supports `invoke_subagent`, clean subagent contexts, and workspace policies `inherit`, `branch` (isolated Git worktree), or `share` where exposed. Test context, tools, worktree behavior and integration in the installed client. **Do not** assume `.codex/agents/*.toml` is consumed by Antigravity or translate TOML fields into unsupported YAML options.
+
+Antigravity reads `AGENTS.md`/ `GEMINI.md` and `.agents/rules/*.md` according to its discovery rules. Keep shared `AGENTS.md` minimal to avoid duplicating handoff/plan content; do not clobber pre-existing rules. If detailed reusable instructions are necessary, prefer documented `.agents/skills/<name>/SKILL.md` patterns rather than obsolete `.agents/workflows/` (legacy IDE workflows stopped being indexed after 2026-10-19). Neither skills nor global rules are required just to perform a portability handoff.
+
+**Do not conflate** the Antigravity IDE, App, CLI, SDK, or managed Gemini API agent: a feature or model-selection API documented for one surface does not prove the others implement it. Verify the user's actual chosen surface.
+
+### Platform-specific Agent Bootstrap and Compatibility Gate
+
+For the user-selected platform, before GOAL start or after a cross-platform transfer:
+1. Verify repo, branch/HEAD, working tree, current handoff, approved write scope, installed client/surface/version, workspace trust, permissions and relevant pre-existing config.
+2. Inspect **only that platform's** instruction/config files and effective model selection. Preserve all unrelated existing files and configurations, including the other platform's agent files.
+3. Bootstrap only roles necessary for the selected profile: Codex `.codex/...`; Antigravity `.agents/agents/...`; shared `AGENTS.md` only when authorized. Never create unused specialist definitions in single-model mode.
+4. Validate schema/discovery, necessary tools, sandbox/approval behavior, concurrency cap, and a small real role invocation if needed. Confirm effective model/effort where observable; distinguish verified identifiers, UI labels and unresolved model-tier mappings.
+5. Confirm the selected platform can read the portable handoff and complete at least a non-destructive resume readiness check. If an agent requires new session/config reload, checkpoint and request the user to resume explicitly.
+6. Record platform, profile, effective capabilities, restrictions, test outcome and next step in `IMPLEMENTATION_HANDOFF.md`. Rerun compatibility only after platform switch or meaningful changes, not every step.
+
+If routing is uncertain, **do not claim** a stronger model was invoked or silently substitute another tier. Ask for approval of a verified fallback or pause only dependent work. Agent config files and prompt rules are **not** filesystem sandboxes; use actual permission/worktree isolation where needed.
+
+### Shared rules and precedence
+
+Review applicable `AGENTS.md`, `GEMINI.md`, `AGENTS.override.md`, global/project rules and local platform config rather than overwriting them. The canonical work plan and portable handoff own the GOAL contract; vendor-specific rules contain minimal operational instructions only. Do not let conflicting platform adapters silently revise approved architecture, model/profile, test policy, or scope.
 
 ## 11. Minimal Context Delegation protocol
 
-Each subagent has an independent working context **only to the extent established by the actual spawn mode**. On supported Codex V2, spawning with `fork_turns: "none"` avoids copying the parent transcript; an unspecified mode may copy history. Verify syntax/behavior against the client's live tool schema. If tools are unavailable under clean forks, test the limitation and report an explicit fallback; never default to copying all history for convenience.
+Each subagent has a separate context **to the extent established by the actual platform/spawn mode**. On supported Codex V2, `fork_turns: "none"` can avoid copying parent history; an unspecified mode may copy history. Antigravity custom subagents are documented as starting with clean context. Validate actual spawn behavior and tool availability in the chosen client. If tools are unavailable in a clean context, report the limitation; never forward complete histories by default.
 
 Each dispatch must contain **only**:
 - task/role and why delegation is justified;
@@ -253,7 +273,7 @@ Workers do not independently redesign architecture, modify another worker's file
 
 ## 13. Planned and dynamic specialist escalation
 
-Default: Luna implements from the ChatGPT plan. A stronger specialist is an exceptional tool, never a routine reviewer of every file.
+Default: the selected profile's primary agent implements from the ChatGPT plan. A stronger specialist is **optional in dual-tier mode** and exceptional, never a routine reviewer of every file. Single-model mode has no automatic capability escalation; use its primary model also for worthwhile parallel workers.
 
 ### Planned escalation
 
@@ -261,7 +281,7 @@ A Plan Part/GOAL may authorize a specialist for a narrowly defined difficult fra
 
 ### Dynamic escalation
 
-When Luna hits a blocker:
+When the active primary agent in a **dual-tier profile** hits a blocker:
 1. Classify ordinary build/test error, missing evidence, plan defect, platform/permission boundary, or genuinely difficult reasoning.
 2. Perform bounded diagnosis and materially different repairs using available plan/source evidence; do not require a fixed number of artificial retries.
 3. Escalate only when a durable blocker remains or the problem is demonstrably too difficult to solve safely at Luna's capability.
@@ -270,22 +290,21 @@ When Luna hits a blocker:
 6. Use **Scoped Implementation** only when Luna demonstrably cannot reliably implement the fragment; restrict changes to explicitly allowed paths and integrate through Luna.
 7. If the result fails, provide only the **new evidence** to the same specialist when available; avoid an unbounded chain of fresh expensive agents.
 
-No specialist may unilaterally alter approved architecture, ownership, safety constraints, authorization scope, or a foundational contract. For a real plan contradiction, pause the affected dependent work and return to ChatGPT/user for an approved correction. Avoid indefinite retries, busy waiting, and silent fallbacks.
+No specialist may unilaterally alter approved architecture, ownership, safety constraints, authorization scope, or a foundational contract. For a real plan contradiction, pause the affected dependent work and return to ChatGPT/user for an approved correction. In **single-model mode**, use bounded primary-agent diagnosis; if it cannot progress, checkpoint and request an approved change instead of silently invoking a stronger tier. Avoid indefinite retries, busy waiting, and silent fallbacks.
 
 ## 14. Autonomous GOAL execution
 
-Starting a GOAL is a user action. Once started and compatible:
-1. Luna reads the persisted `CODEX_HANDOFF.md`, current `PLAN_INDEX.md`, and relevant Plan Parts (not all parts by default), checks source/HEAD and permitted files.
-2. Verify prerequisites and foundational Expected Evidence, identify direct versus parallel work, and start implementing **without gratuitous pauses**.
-3. **Implement a substantial coherent slice using the Plan Parts' code/pseudocode**, integrating relevant changes before testing at the planned shared boundary. Do not reopen settled architecture or test every microstep.
-4. Delegate only independent tasks or justified specialist problems; manage progressive context and safely integrate.
-5. Run the **minimum necessary post-batch/GOAL validation** proving Expected Evidence. Run an earlier check only when a foundational dependency, destructive change, high-risk invariant, or diagnosis demands it.
-6. If a check fails, fix the underlying defect and rerun **failed/impacted** checks; expand to broader tests only if the repair affects other areas. Reuse unchanged previously passing evidence rather than restarting every suite.
-7. Report deviations, evidence, changes, and blockers concisely, persisting only durable state. Complete the GOAL when its acceptance contract is met.
+Starting a GOAL is a user action. Once started with a verified platform/profile:
+1. The **active primary implementer** reads `IMPLEMENTATION_HANDOFF.md`, relevant `PLAN_INDEX.md` and Plan Parts (not all by default), confirms repo/HEAD/working tree and its authorized scope.
+2. Recover only the **remaining** coherent steps and prerequisites from the portable checkpoint; verify that previously marked completed work is reflected in code and still-valid Expected Evidence. Do not redo settled work.
+3. **Implement substantial coherent slices using Plan Parts' code/pseudocode**; do not reopen settled architecture or test each microstep.
+4. Delegate useful independent work under the current profile. In dual-tier mode, escalate hard blockers when justified. In single-model mode, do not fabricate a stronger specialist.
+5. Run the **minimum necessary post-batch/GOAL validation** proving Expected Evidence; earlier checks only for foundational, destructive, high-risk, or diagnostic necessity.
+6. After a failure, repair and rerun failed/impacted checks rather than restarting an unaffected full suite.
+7. At **meaningful durable boundaries** (completed integration slice, validated foundational milestone, before a planned platform switch, or when an interruption is foreseeable), update the **small mutable execution checkpoint**. Do not record every edit or generate ceremonial commits.
+8. Report final evidence/changes/blockers concisely, preserving a verified next action if unfinished. A GOAL completes only when its acceptance contract is met.
 
-Do not stop merely because a compiler error or test failure appears. Do stop at genuine authorization/security/platform limits, unresolvable specialist or tool failure, invalid architecture, or impossible acceptance evidence. Do not promise background continuation or automatic resumption of a paused session.
-
-A user-triggered `continue` or equivalent client resume may be required after an actual pause or new-session bootstrap. Restart from the durable handoff, recheck source and config, and avoid repeating validated work. A model preference expressed in an old conversation does not change the client's selected model.
+Do not stop merely for ordinary build/test errors. Do stop at authorization/security/platform boundaries, an invalid architecture, or a genuine unresolved blocker. A user-triggered resume/new session may be needed after a provider limit or compatibility setup. **A new platform resumes from persisted repository state, not from the previous platform's conversation or subagent state.** It must not automatically claim still-running writes, uncommitted worktrees, or unknown tests as completed.
 
 ## 15. Tests, Expected Evidence, and observability
 
@@ -307,8 +326,8 @@ Do not confuse **fewer runs** with **weaker evidence**. Record the selected vali
 
 At GOAL completion produce a compact **Execution Evidence** summary:
 - GOAL ID and verified base/result commit or working-tree state;
-- actual verified primary model/effort if observable and specialist model if invoked;
-- counts/purposes of Luna workers and specialist invocations, with Solve Only vs Scoped Implementation;
+- platform and actual verified primary model/effort if observable, and specialist model/tier if invoked;
+- counts/purposes of parallel workers and optional specialist invocations, with Solve Only vs Scoped Implementation;
 - changed files, integration result, targeted tests and Expected Evidence verdict;
 - material deviations, unresolved blockers, and any reliable usage metrics **only if actually exposed by the client**.
 
@@ -326,9 +345,9 @@ Preserve observed bugs or hot-path problems outside approved scope as concise fo
 
 Convergence success allows **Cleanup Preparation**, not immediate cleanup execution.
 
-ChatGPT resolves architecture/documentation reconciliation, dead-legacy classification, preservation/deletion boundaries, local generated/build state handling, and clean-rebuild evidence. It creates `CODEX_CLEAN_HANDOFF.md` for a single bounded Luna Cleanup GOAL with no architectural decisions left to invent.
+ChatGPT resolves architecture/documentation reconciliation, dead-legacy classification, preservation/deletion boundaries, local generated/build state handling, and clean-rebuild evidence. It creates `CLEANUP_HANDOFF.md` for a single bounded, **platform-neutral** Cleanup GOAL with no architectural decisions left to invent.
 
-Stop and require explicit user start for cleanup. Luna:
+Stop and require explicit user start for cleanup. The compatible selected primary agent:
 1. Revalidates current code and approved final contract.
 2. Reconciles permanent documentation without erasing intended behavior.
 3. Removes only approved completed planning, obsolete paths, and classified generated residue.
@@ -353,9 +372,63 @@ Use observable evidence (conversation length, loaded source, failure patterns, i
 
 **Continuous Mode:** opt-in; perform successive bounded operations while SAFE, checkpointing at meaningful changes and honoring the mandatory first-decomposition user checkpoint. There is **no copied 3×4 or 12-operation quota**. Use risk-based context checks rather than automatic small artificial blocks. Stop when a genuine user decision/approval is needed, a platform boundary appears, or Context Safety requires handoff; this does not mean asynchronous or background operation.
 
-At handoff persist `CHAT_HANDOFF.md`, synchronize `PROJECT.md`/`PLAN_INDEX.md` pointers and verified baseline, and finish with a populated copyable continuation prompt: repo/branch/HEAD, plan root, phase, last completed unit, next exact action, files to read, blockers, mode, and current manual URL. No placeholders, transcript, or obsolete history.
+For **ChatGPT planning-session continuity**, persist `CHAT_HANDOFF.md`, synchronize `PROJECT.md`/`PLAN_INDEX.md` pointers and verified baseline, and finish with a populated copyable continuation prompt: repo/branch/HEAD, plan root, phase, last completed unit, next exact action, files to read, blockers, mode, and current manual URL. No placeholders, transcript, or obsolete history.
 
-## 19. Maintaining and evolving this protocol
+For **implementation-provider switches**, use the separate canonical `IMPLEMENTATION_HANDOFF.md` contract in §19. Never rely on `CHAT_HANDOFF.md` or a Codex/Antigravity conversation to transmit the live implementation state.
+
+## 19. Portable implementation handoff and platform switching
+
+The user may deliberately switch implementation platforms during an unfinished GOAL, including when usage allowance is exhausted on one platform. The goal remains **one approved mission** with the same contracts, permissions, decomposition and Expected Evidence, regardless of which supported platform executes the remaining work. Platform selection does not change ChatGPT's planning authority or permit evasion of a provider's restrictions.
+
+### Canonical execution checkpoint (minimal state, not transcript)
+
+The **single** `IMPLEMENTATION_HANDOFF.md` in the consumer plan root must contain a stable execution contract (see §5) plus a **small, current checkpoint** with these fields:
+
+| Field | Required meaning |
+| --- | --- |
+| `schema_version`, `checkpoint_id`, `updated_at` | Versioned, unambiguous checkpoint identity (UTC when recorded); do not assume a time alone orders concurrent writes. |
+| `repository`, `branch`, `base_commit`, `observed_HEAD` | Verified source provenance. Note whether changes were actually pushed and which workspace is authoritative. |
+| `platform_from`, `platform_to`, `profile`, `effective_model` | Last known platform and user-selected next platform/profile; mark unverified selections explicitly, not as runtime facts. |
+| `goal_id`, `goal_status`, `completed_slices`, `remaining_slices` | Current scope and only the material implementation slices already integrated versus remaining. |
+| `worktree_state`, `pending_integrations` | Uncommitted changed/untracked files, staged content, worktree/branch paths if relevant, ongoing worker ownership, conflicts and any unmerged patches. |
+| `evidence`, `invalidated_evidence` | Last valid test/Expected Evidence entries and the code/config/dependency baseline they prove; known failures and affected retest scope. |
+| `blocking_issue`, `next_action` | One concise current blocker and **one executable next safe action**, pointing to exact Plan Parts/files. |
+| `transfer_state` | `ACTIVE`, `HANDOFF_READY`, `RESUMING`, `BLOCKED` or `DONE`, with writer ownership and incomplete-transfer notes. |
+
+Omit empty/irrelevant fields and resolved history, previous failed approaches, huge diffs/logs, transcripts, old agents, and repetitive test listings. Reference Git commits, changed file paths, small diffs, or external test artifacts when needed; do not paste entire files into the checkpoint.
+
+### Safe handoff protocol
+
+1. **Prepare on the outgoing platform when possible.** At a meaningful boundary, stop launching subagents, receive or terminate active work, and integrate/record each worker's outcomes. Quiesce active writers. For an abrupt usage-limit interruption, acknowledge that a final checkpoint may be impossible; the incoming platform reconstructs **only uncertain state** from the last checkpoint and real repository/working-tree evidence.
+2. **Preserve implementation bytes.** Prefer a coherent checkpoint commit for integrated source and the small handoff update **when safe and authorized**. If files remain uncommitted, list affected paths and ensure the incoming platform can access the same physical worktree or an explicitly exported patch. A Markdown handoff does **not** transfer unstaged files, ignored assets, unpushed commits, private build artifacts, or worktrees between devices.
+3. **User selects the next platform/profile.** Never silently switch accounts or providers, or automatically start another provider to work around usage restrictions. The user launches/resumes the new client's session in the repository and authorizes the current GOAL continuation.
+4. **Incoming platform verifies** plan root, canonical handoff, branch/HEAD, uncommitted changes/patches, missing generated state, existing writer processes/subagents and outstanding integration. Do not overwrite working files or change branches in a way that loses progress. If parent and child writers may both continue, obtain exclusive ownership or stop until the ambiguity is resolved.
+5. **Run only the incoming platform adapter's Compatibility Gate** (§10). Reuse verified model role/config when valid; do not rewrite the other platform's adapter or regenerate all agent files. If the chosen platform cannot safely meet a mandatory capability, request explicit approval for a supported fallback or stop.
+6. **Resume exactly once.** Change checkpoint to `RESUMING` then `ACTIVE` only after obtaining writer ownership and verifying the current code state. Complete **only remaining slices**. Previously passing tests remain valid under §15's dependency and environment rules; run only invalidated/affected checks.
+7. **Checkpoint after subsequent coherent milestones** and before another intentional switch. Finish at `DONE` only when all GOAL Expected Evidence is valid against the final relevant state.
+
+Avoid excessive checkpoint commits and status churn; durable state must be sufficient for recovery, not a detailed execution diary. If the old platform was interrupted mid-step, assume that slice is **unverified**, inspect existing diffs and tests, and continue safely instead of discarding or blindly repeating work.
+
+### Cross-platform resume prompt contract
+
+A fresh client needs only a concise user instruction such as:
+
+```text
+Continue the approved GOAL from plans/<plan-name>/IMPLEMENTATION_HANDOFF.md.
+Verify current HEAD and working-tree changes, current writer ownership,
+completed vs pending slices, and validity of existing Expected Evidence.
+Use the selected platform's verified agent profile and its compatibility gate.
+Resume the exact next safe action without replaying past work.
+Preserve approved scope. Update only the compact execution checkpoint.
+```
+
+No system can guarantee continuity of a running agent's internal thoughts, live in-memory state, session permissions, or unpersisted buffers. The contract guarantees **recoverable project progress to the extent it was persisted and verified**, not transparent migration of execution.
+
+### External research notes
+
+As checked **2026-11-02**: Antigravity documentation distinguishes the App, CLI, IDE and SDK; its custom subagents support Markdown/YAML, clean context and optional isolated worktrees, with `flash`/`pro`/ `inherit` tier selection; Gemini Flash Medium labels vary over time. Legacy Antigravity IDE workflows were deprecated effective 2026-10-19. Reverify features/model names on the actual installed surface before generating files or claiming model routing.
+
+## 20. Maintaining and evolving this protocol
 
 The *maintenance* repository is `Armoredweb/AN-chatNcodex-SubAgents-WorkFlow`. Its docs are English-first, with a pt-BR user guide. The original `Armoredweb/AN-chatNcodex-WorkFlow` is reference-only, never synchronized automatically.
 
@@ -370,5 +443,9 @@ These are documentation references, not a claim that an actual local client was 
 - [Codex project instructions with AGENTS.md](https://developers.openai.com/codex/guides/agents-md)
 - [Codex hooks](https://developers.openai.com/codex/hooks)
 - [Codex multi-agent implementation](https://github.com/openai/codex)
+- [Antigravity custom subagents](https://antigravity.google/docs/subagents)
+- [Antigravity model selector](https://antigravity.google/docs/models)
+- [Antigravity rules and AGENTS.md](https://antigravity.google/docs/rules)
+- [Antigravity migration from workflows to skills](https://antigravity.google/docs/migration/workflows-to-skills)
 
-The names, keys, and behavior described here were checked against public documentation/code on **2026-10-30**. Revalidate before creating consumer-project configuration; interfaces and models may change.
+Codex details derive from the prior **2026-10-30** documentation inspection; Antigravity platform details were examined on **2026-11-02**. Neither provider was tested in the user's actual local client. Revalidate before creating consumer-project configuration; interfaces, limits and models may change.
