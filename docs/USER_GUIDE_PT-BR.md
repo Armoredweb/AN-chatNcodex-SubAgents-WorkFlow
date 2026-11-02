@@ -65,7 +65,7 @@ Prossiga com a decomposição conforme o workflow canônico.
 
 Após a primeira decomposição e criação do índice, ocorre uma pausa obrigatória para revisão do escopo. O comando `continue` inicia o **Decomposition Audit Gate**, verificando MASTER_PLAN ↔ PLAN_INDEX nos dois sentidos.
 
-A expansão deve priorizar **o máximo de código de implementação correto e útil que o ChatGPT conseguir produzir**, incluindo funções, interfaces, tratamento de erros, integração e pseudocódigo detalhado. Plan Parts maiores e ricos em código são desejáveis quando economizam raciocínio da Luna. Não reduzir código útil para deixar os planos pequenos. Planejar **poucos testes essenciais por lote/GOAL**, sem exigir teste para cada Plan Part.
+A expansão deve priorizar **o máximo de código de implementação correto e útil que o ChatGPT conseguir produzir**, incluindo funções, interfaces, tratamento de erros, integração e pseudocódigo detalhado. Plan Parts maiores e ricos em código são desejáveis quando economizam raciocínio da Luna. Não reduzir código útil para deixar os planos pequenos. Planejar **somente os testes relacionados ao código alterado e às dependências/consumidores afetados**, com seletores específicos por lote/GOAL. A suíte pode crescer no repositório, mas nunca deve ser executada inteira durante a implementação.
 
 Antes do handoff portátil de implementação, o ChatGPT executa:
 - **Pass A:** otimização sem perder informações necessárias;
@@ -104,16 +104,18 @@ Use o agente principal verificado da plataforma/perfil selecionados.
 Implemente grandes partes coerentes com o código dos planos.
 Delegue só tarefas independentes úteis ou bloqueios comprovados,
 sempre com contexto mínimo e limites explícitos.
-Teste os resultados essenciais no fim do lote/GOAL,
-não cada Plan Part. Reutilize testes aprovados enquanto
-código/dependências/configuração relevantes não mudarem.
-Se falhar, corrija e repita só os testes afetados.
+Execute apenas testes específicos do código alterado e das
+dependências/consumidores afetados, usando filtros explícitos.
+NUNCA execute toda a suíte durante a implementação, nem no fim
+de um GOAL. Reaproveite resultados aprovados ainda válidos.
+Se falhar, corrija e repita só os testes invalidados.
+Não use comandos sem filtro que disparem a suíte inteira.
 Comprove Expected Evidence no estado final pertinente.
 Respeite arquitetura e arquivos autorizados.
 Não solicite trocas manuais de modelo durante o GOAL.
 ~~~
 
-O agente principal implementa lotes coerentes e corrige falhas normais sem escalonar imediatamente. Testes antecipados ficam reservados a contratos fundamentais ou riscos altos. Testes anteriormente aprovados só devem ser repetidos quando o código coberto, suas dependências relevantes ou o ambiente/configuração mudarem; após uma correção, executar apenas os testes impactados. No modo de duas capacidades, pode chamar um especialista forte em **Solve Only**, ou **Scoped Implementation** quando indispensável. No modo de modelo único não deve chamar um modelo mais caro sem nova autorização.
+O agente principal implementa lotes coerentes e corrige falhas normais sem escalonar imediatamente. Testes antecipados ficam reservados a contratos fundamentais ou riscos altos. Testes anteriormente aprovados só devem ser repetidos quando o código coberto, suas dependências relevantes, seus seletores ou o ambiente/configuração mudarem; após uma correção, executar apenas os testes impactados. A suíte completa continua crescendo como conjunto de testes disponíveis, mas nunca é executada automaticamente durante um GOAL. No modo de duas capacidades, pode chamar um especialista forte em **Solve Only**, ou **Scoped Implementation** quando indispensável. No modo de modelo único não deve chamar um modelo mais caro sem nova autorização.
 
 O especialista pode solicitar arquivos adicionais específicos e justificar a necessidade; Luna só autoriza ampliação operacional dentro dos limites já aprovados.
 
@@ -134,13 +136,13 @@ Valide o perfil de agentes desta plataforma e implemente
 somente os passos restantes, sem repetir o histórico.
 ~~~
 
-Se o limite interromper a sessão abruptamente, o último checkpoint pode estar incompleto; o novo agente compara o arquivo com o código real antes de continuar. Alterações sem commit **não viajam entre computadores** por causa de um handoff: é preciso o mesmo diretório, commit ou patch explícito. A troca depende da sua ação e respeita os limites e permissões de cada serviço.
+Ao retomar, execute somente os seletores de testes afetados ou invalidados, jamais toda a suíte como ritual de recuperação. Se o limite interromper a sessão abruptamente, o último checkpoint pode estar incompleto; o novo agente compara o arquivo com o código real antes de continuar. Alterações sem commit **não viajam entre computadores** por causa de um handoff: é preciso o mesmo diretório, commit ou patch explícito. A troca depende da sua ação e respeita os limites e permissões de cada serviço.
 
 ### Validação final
 
-Ao concluir um GOAL, Luna apresenta evidências objetivas: arquivos alterados, integrações, testes, Expected Evidence, chamadas a subagentes e limitações. Números de tokens e modelo realmente utilizado só devem ser relatados quando houver dados confiáveis.
+Ao concluir um GOAL, o agente principal apresenta evidências objetivas: arquivos alterados, integrações, **testes específicos executados e seus resultados**, Expected Evidence, chamadas a subagentes e limitações. Números de tokens e modelo realmente utilizado só devem ser relatados quando houver dados confiáveis.
 
-O ChatGPT faz o **Convergence Check**, comparando código real e requisitos aprovados. Após convergência, prepara o `CLEANUP_HANDOFF.md` portátil. A limpeza exige **novo início explícito** do usuário, na plataforma compatível escolhida; não é automática.
+O ChatGPT faz o **Convergence Check**, comparando código real e requisitos aprovados e reaproveitando evidências válidas. A suíte completa poderá ser executada **somente em uma etapa separada de validação final do sistema/release, quando solicitada ou exigida**, nunca automaticamente durante GOALs. Após convergência, prepara o `CLEANUP_HANDOFF.md` portátil. A limpeza exige **novo início explícito** do usuário, na plataforma compatível escolhida; não é automática.
 
 ## 7. Continuidade e segurança
 

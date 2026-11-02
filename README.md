@@ -10,7 +10,7 @@ A ChatGPT-first, **platform-portable** planning and multi-agent implementation w
 - **Portable execution:** Codex can use Luna High; Antigravity can use a verified Gemini Flash Medium-class agent. The primary model both orchestrates **and implements** each bounded GOAL.
 - **Configurable model modes:** dual-tier (economical primary/workers plus optional stronger specialist) or single-model (same model for primary and parallel workers). Specialists are exceptional and prefer **Solve Only**; **Scoped Implementation** is a bounded fallback.
 - **Context stays deliberate:** minimal delegation packets, justified progressive context requests, explicit ownership, and no unnecessary full-history forks.
-- **Portable GOAL continuity:** implement coherent batches with **few essential tests at integration boundaries**, reusing still-valid evidence. A compact `IMPLEMENTATION_HANDOFF.md` records verified progress and the next safe action so a user-selected platform can resume an unfinished GOAL without replaying the old session.
+- **Selective GOAL testing:** keep a growing, cumulative repository test suite, but during implementation execute **only explicitly targeted tests of changed code and affected dependencies/consumers**. Never run the entire suite in a GOAL—even at completion—or repeat unaffected passing tests. A compact `IMPLEMENTATION_HANDOFF.md` preserves current evidence and the next safe action across platforms.
 
 This is an independently maintained successor to [AN-chatNcodex-WorkFlow](https://github.com/Armoredweb/AN-chatNcodex-WorkFlow), not a synchronized fork. The original remains reference-only.
 
@@ -43,9 +43,9 @@ Model IDs where supported, otherwise effective UI labels and agent tiers, effort
 
 1. Implementation readiness through **code-forward complete plans**: prioritize useful code and precise pseudocode over aggressive document compression; shorten redundant prose, not the implementation.
 2. No unnecessary specialist calls, repeated scans, artificial retries, or token-heavy context forwarding; single-model operation is supported.
-3. Parallelism only when dependencies, write ownership, integration, and shared state make it beneficial and safe.
+3. Parallelism only when dependencies, write ownership, integration, and shared state make it beneficial and safe; test runs are scoped and coordinated.
 4. Code and repository evidence outrank memory or obsolete notes. Approved requirements still govern convergence.
-5. User-controlled platform switching preserves implementation progress and respects authorization, provider limits, and valid test evidence.
+5. User-controlled platform switching preserves implementation progress and valid targeted test evidence. Comprehensive suite execution, if needed, is a **separate post-implementation validation gate**, never a routine GOAL step. Respect authorization and provider limits.
 
 ## License
 

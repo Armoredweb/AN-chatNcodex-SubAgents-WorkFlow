@@ -12,7 +12,7 @@ The workflow repository defines the protocol; the consumer repository holds its 
 - The selected platform runs a **primary agent that both orchestrates and implements**. For Codex, prefer Luna High; for Antigravity, a verified Gemini Flash Medium-class configuration is a candidate. These are profiles, not permanent model names.
 - Support both **dual-tier mode** (economical primary/parallel workers plus optional stronger specialist) and **single-model mode** (same selected model for primary and parallel workers, no stronger specialist configured or assumed). Direct implementation remains the default in either mode.
 - The workflow optimizes **implementation readiness and useful implementation code produced by ChatGPT**, shifting complex reasoning away from the implementation platform. Favor code/pseudocode-rich plans over superficially short plans; minimize redundant prose and expensive rediscovery, not useful technical content.
-- Execute **coherent implementation batches with few, high-value validation gates**; do not require a new test or a test run for every Plan Part or microstep.
+- Execute **coherent implementation batches with selective, high-value validation**. The test repository may grow cumulatively, but during implementation run **only tests directly related to the active changes and their affected dependencies/consumers**—never the whole accumulated suite.
 - A GOAL is an autonomous, bounded implementation mission; plan files do not define agent sessions, commits, or test boundaries.
 - This protocol never authorizes bypassing product, account, safety, rate, security, or platform limits. A subagent is not an authorization bypass.
 
@@ -77,7 +77,7 @@ Dependency-oriented routing and traceability map: macroblocks, microsteps, order
 
 The matrix is **platform-profiled**: for each supported platform, record primary, worker and optional specialist roles, exact model IDs/versions and effort **when the interface exposes them**, otherwise the verified selector name/tier and its resolution limitation; client/surface/version, verification date, permitted fallbacks, routing constraints, and unavailable features. Include `single-model` and `dual-tier` modes and platform-specific parallelism limits. Never invent exact IDs from display labels or assume tiers map to fixed versions. Revalidate material runtime differences before execution. Never encode models, platforms, or mutable assignments in Plan Part filenames.
 
-Each GOAL entry identifies primary-implementer ownership, parallel candidates, optional dual-tier specialist triggers, delegation envelopes, integration, **batch-level validation boundaries**, the essential affected-test set and reusable prior evidence. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
+Each GOAL entry identifies primary-implementer ownership, parallel candidates, optional dual-tier specialist triggers, delegation envelopes, integration, **batch-level selective validation boundaries**, relevant test targets/selectors and dependency impact, plus reusable previously passing evidence. There is no cumulative per-GOAL list of all historical tests. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
 
 ### Plan Parts
 
@@ -87,7 +87,7 @@ Filename/path describe stable work identity, not Luna/SOL assignment. A Plan Par
 - **substantial concrete source code, function bodies, interfaces, implementation skeletons, or detailed executable-style pseudocode** for non-trivial mechanisms, including algorithms, call sequences, data flow, and migration order;
 - failure/retry/cancellation, races, persistence, resource/performance and cleanup behavior expressed in the proposed implementation where useful;
 - dependencies, writable ownership, independent/parallel slices, integration boundaries;
-- **essential** build/test/instrumentation procedures and objective Expected Evidence **at shared batch/GOAL validation boundaries**, not an automatic test per part;
+- **essential scoped test targets/commands**, impacted dependencies, and objective Expected Evidence **at shared batch/GOAL validation boundaries**; do not request the full project test suite or an automatic test per part;
 - a proposed specialist trigger and minimal context only when justified.
 
 **Default toward more useful implementation code, not less.** If ChatGPT has enough verified source and decisions to draft a correct implementation, provide it. Prefer code that can be adapted or implemented directly over prose describing what the primary implementer should invent. Use precise pseudocode when exact source would require unverified APIs or would lock in an unjustified detail. Explain integration points, ownership, and assumptions. Code volume is not itself a goal: omit boilerplate, existing unchanged code, speculative unverified implementations, and irrelevant examples.
@@ -150,7 +150,7 @@ For each substantial Plan Part:
 3. Perform **targeted current external research** when comparable solutions, standards, or changing platform capabilities can materially affect the design; examine the actual sources and trade-offs. Do not create decorative research requirements for trivial repository-local work.
 4. Resolve meaningful alternatives in ChatGPT, recording only implementation-relevant reasoning and sources.
 5. **Write the implementation before merely describing it** when enough source evidence exists: provide concrete data types, function signatures and bodies, sequences, error handling, and integration code where useful; otherwise give sufficiently precise pseudocode with explicit assumptions. Do not remove working implementation detail to make a Plan Part shorter.
-6. Specify migration, failure/concurrency cases, observability, integration, and the **smallest essential shared validation set** proving the relevant GOAL/batch outcomes. Avoid creating or running tests for each Plan Part by default.
+6. Specify migration, failure/concurrency cases, observability, integration, and the **smallest explicitly selected affected-test set** proving the relevant GOAL/batch outcomes. Existing test suites may accumulate as permanent project assets, but do not add per-part run requirements or include unrelated historical tests in a GOAL.
 7. Mark independent work and potential specialist calls only when useful.
 
 ### Code-first planning policy
@@ -169,17 +169,17 @@ After all required parts are expanded, perform the full gates in order. Checkpoi
 
 ### Pass A — implementation-preserving optimization
 
-Remove filler, outdated rationale, duplicated explanations, ambiguous choices, and avoidable planning left to the economical primary agent. **Increase actionable code density**: add missing concrete implementations, function bodies, algorithms, migration steps, race/error handling, and pseudocode where verified source permits. Do **not** compress or remove useful implementation code just to shrink the plan. Consolidate redundant test instructions into shared GOAL/batch validation without removing essential evidence or failure behavior.
+Remove filler, outdated rationale, duplicated explanations, ambiguous choices, and avoidable planning left to the economical primary agent. **Increase actionable code density**: add missing concrete implementations, function bodies, algorithms, migration steps, race/error handling, and pseudocode where verified source permits. Do **not** compress or remove useful implementation code just to shrink the plan. Consolidate redundant test instructions into **selective, affected-code GOAL/batch validation**; eliminate accidental full-suite commands and repeated execution of still-valid historical tests without removing essential evidence or failure behavior.
 
 ### Pass B — Specialist Minimization and Agent Routing
 
 Challenge **every** planned stronger-model call: can better source evidence, scope reduction, a concrete interface, algorithm, code snippet, or dependency resolution make the economical primary agent capable? Retain specialist calls only when a material residual difficulty remains **in the selected dual-tier profile**. A single-model profile has no automatic stronger-model escalation; a true capability blocker requires explicit user approval to change mode/profile/platform. Decide **Solve Only** before **Scoped Implementation** unless the latter is clearly necessary.
 
-Audit parallel slices for genuine independence, coordination cost, shared state, file ownership, and integration ordering. No automatic one-part-one-subagent or one-part-one-test mapping.
+Audit parallel slices for genuine independence, coordination cost, shared state, file ownership, and integration ordering. No automatic one-part-one-subagent or one-part-one-test mapping. Verify that concurrent agents cannot accidentally launch overlapping test suites or compete for shared test resources.
 
 ### Pass C — Cross-artifact Consistency Gate
 
-Audit `MASTER_PLAN → PLAN_INDEX → Plan Parts → current repository` in both directions for requirements, interfaces, states, ownership, contracts, dependencies, migration, tests, and approved decisions. Add cross-agent checks: **platform-neutral contracts**, profile-specific effective model/tier routing, delegation inputs/outputs, allowed reads/writes, concurrent writes, integration, specialist permissions, **cross-platform checkpoint/resume**, and Expected Evidence.
+Audit `MASTER_PLAN → PLAN_INDEX → Plan Parts → current repository` in both directions for requirements, interfaces, states, ownership, contracts, dependencies, migration, **test impact mappings and exact selective test selectors**, and approved decisions. Add cross-agent checks: **platform-neutral contracts**, profile-specific effective model/tier routing, delegation inputs/outputs, allowed reads/writes, concurrent writes, integration, specialist permissions, **cross-platform checkpoint/resume**, and Expected Evidence.
 
 Repair contradictions in the **owning canonical artifact** (architecture → master, decomposition/routing → index, mechanism → part), propagate downstream, then repeat until a complete clean pass or real blocker. Do not hide contradictions by patching handoffs alone.
 
@@ -189,7 +189,7 @@ Build meaningful Implementation Batches; mark foundational GOALs whose evidence 
 - bounded mission, current-to-target delta, dependencies, authorized modifications;
 - direct primary-agent steps, optional independent worker tasks and ownership;
 - justified specialist triggers and smallest initial delegation packet **only in a supported dual-tier profile**;
-- integration sequence, rollback/recovery rules, **a substantial implementation batch followed by few essential tests at its meaningful boundary**, and Expected Evidence. Include earlier tests only for justified risk/foundational gates; identify which previously passing checks remain valid unless affected code/dependencies change.
+- integration sequence, rollback/recovery rules, **a substantial implementation batch followed by only its changed/affected tests at a meaningful boundary**, and Expected Evidence. Provide exact selective test targets/commands where known, including direct dependencies and impacted consumers. List earlier tests only for justified risk/foundational gates; do **not** include or run the whole accumulated suite during any implementation GOAL.
 
 Confirm the per-platform capability matrix and compatibility/bootstrap obligations, then persist `IMPLEMENTATION_HANDOFF.md` as the shared execution contract and initial checkpoint. The user explicitly selects a platform/profile and starts implementation; planning approval is not implementation-start authorization.
 
@@ -264,7 +264,7 @@ Before spawning workers, record:
 1. Dependency prerequisites and immutable upstream contracts.
 2. File/module ownership and allowed writes.
 3. Shared state: generated files, caches, databases, test fixtures, build directories, ports, locks, and migrations.
-4. Integration owner, timing/order, merge plan, and a **shared post-integration validation boundary** rather than a test run per worker or Plan Part.
+4. Integration owner, timing/order, merge plan, and **one selected affected-test boundary** for the integrated changes rather than a test run per worker, Plan Part, or unrelated module.
 5. Concurrency ceiling and stop/failure procedure.
 
 Read-only exploration can overlap widely if useful. Write tasks require non-conflicting ownership and compatible shared resources. Different source files do **not** automatically mean independent tasks. Where practical, use isolated worktrees/branches for writes that cannot safely share a workspace; otherwise serialize.
@@ -299,45 +299,56 @@ Starting a GOAL is a user action. Once started with a verified platform/profile:
 2. Recover only the **remaining** coherent steps and prerequisites from the portable checkpoint; verify that previously marked completed work is reflected in code and still-valid Expected Evidence. Do not redo settled work.
 3. **Implement substantial coherent slices using Plan Parts' code/pseudocode**; do not reopen settled architecture or test each microstep.
 4. Delegate useful independent work under the current profile. In dual-tier mode, escalate hard blockers when justified. In single-model mode, do not fabricate a stronger specialist.
-5. Run the **minimum necessary post-batch/GOAL validation** proving Expected Evidence; earlier checks only for foundational, destructive, high-risk, or diagnostic necessity.
-6. After a failure, repair and rerun failed/impacted checks rather than restarting an unaffected full suite.
+5. Run **only explicitly selected tests of this batch's changed code and affected dependencies/consumers**, enough to prove Expected Evidence. Do **not** run the full accumulated suite during implementation or at GOAL completion. Earlier scoped checks are allowed only for foundational, destructive, high-risk, or diagnostic necessity.
+6. After a failure, repair and rerun only failed/impacted selectors; preserve still-valid passing results. Never respond to a targeted test failure by automatically launching the full suite.
 7. At **meaningful durable boundaries** (completed integration slice, validated foundational milestone, before a planned platform switch, or when an interruption is foreseeable), update the **small mutable execution checkpoint**. Do not record every edit or generate ceremonial commits.
 8. Report final evidence/changes/blockers concisely, preserving a verified next action if unfinished. A GOAL completes only when its acceptance contract is met.
 
 Do not stop merely for ordinary build/test errors. Do stop at authorization/security/platform boundaries, an invalid architecture, or a genuine unresolved blocker. A user-triggered resume/new session may be needed after a provider limit or compatibility setup. **A new platform resumes from persisted repository state, not from the previous platform's conversation or subagent state.** It must not automatically claim still-running writes, uncommitted worktrees, or unknown tests as completed.
 
-## 15. Tests, Expected Evidence, and observability
+## 15. Selective implementation testing, Expected Evidence, and observability
 
-Every GOAL declares **Expected Evidence** that actually proves the requested behavior. Evidence can be targeted unit/integration tests, a build, API/ABI inspection, migration state, runtime behavior, deterministic reproduction, a measurement, or verified generated artifacts. Existing tests can satisfy new requirements when they genuinely cover the behavior; do not add redundant tests solely because a new Plan Part exists.
+**Fundamental separation:** the project's test suite is **cumulative as source code**, but test **execution during implementation is selective**. Existing tests remain available for final system/release validation. An implementation GOAL must never automatically execute the entire repository-wide test suite, regardless of how many historical tests have accumulated.
 
-### Test planning: essential coverage, not per-part accumulation
+Every GOAL defines **Expected Evidence** that proves its requested behavior. Evidence may come from scoped unit/integration tests, isolated component checks, a targeted build/type-check, API/ABI verification, migration state, runtime inspection, measured behavior, or other objectively observable results. Reuse existing coverage instead of duplicating tests; add a new test only when needed to demonstrate meaningful missing behavior.
 
-- **Plan testing at meaningful Implementation Batch/GOAL boundaries.** Favor larger coherent implementation slices, then a small, decisive validation set at the end. A Plan Part, microstep, subagent return, or individual file change does not automatically trigger its own test run.
-- **Do not prescribe, generate, or execute a new test for every Plan Part.** Select the minimum combination of existing and new checks needed to prove the approved Expected Evidence and critical invariants. Add tests for missing meaningful coverage, not for ritual completeness.
-- **Early checks are exceptions** when necessary to prove a foundational contract before dependents, prevent costly propagation of a serious fault, validate a destructive migration, or de-risk concurrency/security/data-loss behavior. A quick compiler/type check may also be useful to unblock implementation. Do not turn these exceptions into an always-on per-edit loop.
-- **Reuse passing results only while still valid.** A result must identify the tested code/commit or working-tree state, test version, relevant dependencies/configuration, and environment assumptions where material. If none of the covered source, transitive dependencies, build/test configuration, generated state, or runtime conditions that affect the check have changed, do not rerun it merely because another test was added elsewhere.
-- **Invalidate affected evidence, not everything.** Changes in tested code or its relevant dependencies, shared infrastructure, toolchain/configuration, or test behavior require the impacted tests to be rerun; changes outside that impact boundary do not. When impact cannot be established reliably, run the minimum broader regression set needed to restore confidence.
-- **Failure-driven loop:** first run the selected end-of-batch checks; diagnose failures, repair, rerun the failed/affected checks, and repeat only while producing material progress. Do not restart the full suite after every fix. Before declaring the GOAL done, confirm each required Expected Evidence result applies to the **final relevant code state**.
-- **Broader clean validation** belongs at real integration/release/convergence boundaries when cross-cutting changes justify it, and at the explicit clean rebuild gate of Cycle Closure. Preserve safety-critical or mandatory project tests despite the preference for fewer runs.
+### Scoped test selection — mandatory for every implementation GOAL
 
-Do not confuse **fewer runs** with **weaker evidence**. Record the selected validation boundary and evidence validity in the index/handoff; no continuously growing cumulative test checklist.
+1. **Determine actual changes first.** Build a small impact map from edited/added modules, public interfaces, changed test code, relevant generated artifacts, shared contracts, and transitive dependencies/consumers that could be affected.
+2. **Select test targets explicitly.** Run only tests for the changed functionality plus tests for genuinely affected dependencies/integration boundaries. Prefer named test cases, files, packages, modules, fixtures or filtered integration scenarios. Never select all test directories simply because the suite exists.
+3. **Choose one meaningful validation boundary.** Favor implementing and integrating a coherent large slice before running its selected tests. A Plan Part, microstep, subagent delivery, commit or single file edit does not by itself mandate any test execution.
+4. **Check command scope before launching.** Use known test filters or package/target arguments. Avoid unfiltered project-wide commands such as `pytest`, `cargo test`, `go test ./...`, `ctest` without selection, `npm test` scripts that invoke every package, or equivalent commands **unless a specific filtered invocation has been verified**. Review script aliases and task runners to ensure that a seemingly targeted command does not launch the whole suite.
+5. **Never use full-suite fallback during implementation.** If impact is uncertain, inspect only enough dependency edges to choose a **conservative but targeted subset**. If no reliable selective runner exists, use a justified isolated check or record unverified evidence/a genuine blocker. Do not silently run the entire suite to compensate for missing selectors.
+6. **Rerun only invalidated tests.** On failure, diagnose and fix, then rerun failed tests and any other selectors affected by the fix. Previously passing tests remain valid if their covered code, transitive dependencies, test definitions, generated state, toolchain/configuration and material environment have not changed. New tests added elsewhere do not invalidate unrelated passing evidence.
+7. **Prove the final state.** A GOAL is complete only when the selected relevant Expected Evidence holds for its final affected code state. Do not append a full-suite regression run at GOAL completion. If a mandated or safety-critical gate requires extra coverage, select its relevant targeted checks; if only a full suite can satisfy a non-negotiable external gate, report the boundary rather than violating the GOAL policy.
+
+### Cumulative test library and final comprehensive verification
+
+- Continue preserving and adding **useful automated tests** over the project's lifetime. The accumulated test suite is an asset, **not** an execution queue that every agent must replay.
+- Reserve a **complete-suite run, if desired or required**, for a separately defined **post-implementation system/release validation gate**, after the relevant implementation GOALs have ended. It is **not** part of routine GOAL execution, per-batch checks, every commit, every new test, or automatic recovery. A final release gate may run the entire suite once when its scope and cost are explicitly accepted; a clean build alone does not imply a full test sweep.
+- Existing organizational CI, branch protection or security-mandated checks still apply. Do not modify/disable such checks without authorization. Identify unavoidable automatically triggered broad CI and distinguish it from **agent-invoked** testing; report its cost/constraints instead of hiding it or repeatedly triggering it.
+- The only standing early exceptions are **scoped** checks for foundational contracts, destructive migrations, concurrency/security/data-loss risks or an actual debugging need. Exceptions never authorize running unrelated tests during a GOAL.
+
+### Efficient evidence and cross-platform reuse
+
+The index/handoff should hold **only** current GOAL selectors, observed outcome, relevant source/commit or dirty-state provenance, material test/config/environment dependencies, and invalidations. Do not maintain a growing ledger of historical test commands or repeated logs. When switching between Codex and Antigravity, the incoming agent compares real code/configuration with these provenance notes and executes **only newly invalidated/affected selectors**, never the entire suite as a resume ritual.
 
 ### Execution Evidence
 
-At GOAL completion produce a compact **Execution Evidence** summary:
+At GOAL completion report briefly:
 - GOAL ID and verified base/result commit or working-tree state;
-- platform and actual verified primary model/effort if observable, and specialist model/tier if invoked;
-- counts/purposes of parallel workers and optional specialist invocations, with Solve Only vs Scoped Implementation;
-- changed files, integration result, targeted tests and Expected Evidence verdict;
-- material deviations, unresolved blockers, and any reliable usage metrics **only if actually exposed by the client**.
+- platform and verified primary model/effort if observable, and specialist tier if used;
+- counts/purposes of parallel workers and optional specialist invocations;
+- changed files, integration result, **exact selective tests/checks run and their outcomes**, and Expected Evidence verdict;
+- previously passing checks reused with valid provenance, material gaps/blockers, and only reliable usage metrics actually exposed by the client.
 
-Do not fabricate token totals, effort routing, or benchmark numbers. Do not keep large logs or full agent transcripts unless needed to reproduce a real failure. Compare overall GOAL cost/quality, not just specialist-call counts.
+Do not fabricate tokens, benchmark values, model routing, or test results. Do not include transcripts or large logs unless needed for a reproducible failure. Evaluate total GOAL completion cost and quality, not suite size or number of test runs.
 
 ## 16. Convergence review after implementation
 
 After a completed implementation batch, ChatGPT freshly compares **current repository code and test evidence** with the approved master/index/Plan Parts.
 
-Classify any mismatch as missing, partial, contradictory, unrequested, or an approved requirement change. For material divergences, create bounded corrective GOALs with Expected Evidence; do not silently accept code as the new requirement. **Inspect and reuse still-valid passing evidence first.** Re-run checks only for changed/impacted areas, invalid evidence, or an uncovered required behavior, until intended behavior is supported or a genuine blocker/user decision remains.
+Classify any mismatch as missing, partial, contradictory, unrequested, or an approved requirement change. For material divergences, create bounded corrective GOALs with Expected Evidence; do not silently accept code as the new requirement. **Inspect and reuse still-valid passing evidence first.** During corrective implementation GOALs, run **only selected changed/affected test targets**, not the full suite. Broader end-to-end verification, if chosen, belongs to the separate post-implementation validation gate rather than repeated corrective loops.
 
 Preserve observed bugs or hot-path problems outside approved scope as concise follow-up findings, not opportunistic undocumented changes.
 
@@ -351,7 +362,7 @@ Stop and require explicit user start for cleanup. The compatible selected primar
 1. Revalidates current code and approved final contract.
 2. Reconciles permanent documentation without erasing intended behavior.
 3. Removes only approved completed planning, obsolete paths, and classified generated residue.
-4. Validates from a clean build/test state.
+4. Validates from a clean build plus **the essential scoped cleanup/integration checks**. This does not automatically invoke the cumulative full suite; any comprehensive suite run belongs to the separately agreed post-implementation system/release gate.
 5. Removes temporary cleanup handoff when complete.
 6. Preserves only concise live `CLEANUP_FINDINGS.md` for the next planning cycle.
 
@@ -391,7 +402,7 @@ The **single** `IMPLEMENTATION_HANDOFF.md` in the consumer plan root must contai
 | `platform_from`, `platform_to`, `profile`, `effective_model` | Last known platform and user-selected next platform/profile; mark unverified selections explicitly, not as runtime facts. |
 | `goal_id`, `goal_status`, `completed_slices`, `remaining_slices` | Current scope and only the material implementation slices already integrated versus remaining. |
 | `worktree_state`, `pending_integrations` | Uncommitted changed/untracked files, staged content, worktree/branch paths if relevant, ongoing worker ownership, conflicts and any unmerged patches. |
-| `evidence`, `invalidated_evidence` | Last valid test/Expected Evidence entries and the code/config/dependency baseline they prove; known failures and affected retest scope. |
+| `evidence`, `invalidated_evidence` | Compact, still-valid Expected Evidence and **only the affected test selectors**, with relevant code/config/dependency provenance; no cumulative historical suite log. |
 | `blocking_issue`, `next_action` | One concise current blocker and **one executable next safe action**, pointing to exact Plan Parts/files. |
 | `transfer_state` | `ACTIVE`, `HANDOFF_READY`, `RESUMING`, `BLOCKED` or `DONE`, with writer ownership and incomplete-transfer notes. |
 
@@ -404,7 +415,7 @@ Omit empty/irrelevant fields and resolved history, previous failed approaches, h
 3. **User selects the next platform/profile.** Never silently switch accounts or providers, or automatically start another provider to work around usage restrictions. The user launches/resumes the new client's session in the repository and authorizes the current GOAL continuation.
 4. **Incoming platform verifies** plan root, canonical handoff, branch/HEAD, uncommitted changes/patches, missing generated state, existing writer processes/subagents and outstanding integration. Do not overwrite working files or change branches in a way that loses progress. If parent and child writers may both continue, obtain exclusive ownership or stop until the ambiguity is resolved.
 5. **Run only the incoming platform adapter's Compatibility Gate** (§10). Reuse verified model role/config when valid; do not rewrite the other platform's adapter or regenerate all agent files. If the chosen platform cannot safely meet a mandatory capability, request explicit approval for a supported fallback or stop.
-6. **Resume exactly once.** Change checkpoint to `RESUMING` then `ACTIVE` only after obtaining writer ownership and verifying the current code state. Complete **only remaining slices**. Previously passing tests remain valid under §15's dependency and environment rules; run only invalidated/affected checks.
+6. **Resume exactly once.** Change checkpoint to `RESUMING` then `ACTIVE` only after obtaining writer ownership and verifying the current code state. Complete **only remaining slices**. Previously passing tests remain valid under §15's dependency and environment rules; run only invalidated/affected named tests **and never the full suite as a platform-resume check**.
 7. **Checkpoint after subsequent coherent milestones** and before another intentional switch. Finish at `DONE` only when all GOAL Expected Evidence is valid against the final relevant state.
 
 Avoid excessive checkpoint commits and status churn; durable state must be sufficient for recovery, not a detailed execution diary. If the old platform was interrupted mid-step, assume that slice is **unverified**, inspect existing diffs and tests, and continue safely instead of discarding or blindly repeating work.

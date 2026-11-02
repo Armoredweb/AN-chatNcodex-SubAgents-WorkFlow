@@ -64,7 +64,7 @@ Proceed with decomposition under the canonical workflow.
 
 ChatGPT persists the master baseline and index and stops after the initial decomposition for your review. The next `continue` runs the **bidirectional Decomposition Audit Gate**, then later Plan Part expansion.
 
-For substantial Plan Parts, ChatGPT should provide **as much verified, directly useful implementation code as practicable**—functions, interfaces, error handling, integrations, and detailed pseudocode—rather than shrinking the document at Luna's expense. More code-heavy Plan Parts are encouraged when that reduces later implementation reasoning. Specify **a small shared set of essential tests at the batch/GOAL boundary**, not automatic tests per part. After expansion it performs:
+For substantial Plan Parts, ChatGPT should provide **as much verified, directly useful implementation code as practicable**—functions, interfaces, error handling, integrations, and detailed pseudocode—rather than shrinking the document at Luna's expense. More code-heavy Plan Parts are encouraged when that reduces later implementation reasoning. Specify **only named tests for the changed code and affected dependencies/consumers at the batch/GOAL boundary**; retain the cumulative suite as source code but never invoke it wholesale during implementation. After expansion it performs:
 - **Pass A:** implementation-preserving optimization;
 - **Pass B:** specialist minimization, Luna routing, and worthwhile parallelism;
 - **Pass C:** cross-plan, current-source, and multi-agent consistency.
@@ -102,15 +102,16 @@ Start GOAL G01 from the current IMPLEMENTATION_HANDOFF.md.
 Use the verified primary implementer for my selected platform/profile.
 Implement substantial coherent slices directly from prepared code;
 delegate only useful independent work or justified hard blockers.
-Test the essential integrated batch/GOAL outcomes, not every Plan Part.
-Reuse passing tests unless affected code/dependencies/config changed.
-On failure, repair then rerun only failed/impacted checks.
+Select explicit test cases/files/packages for changed functionality and
+its affected dependencies/consumers only; NEVER run the full suite in a GOAL.
+Reuse valid passing results; on failure rerun only invalidated tests.
+Do not use an unfiltered command or a broad-suite fallback.
 Prove all Expected Evidence against the final relevant code state.
 Stay inside approved architecture and write scope.
 Do not ask me to switch models during the GOAL.
 ~~~
 
-The primary implements larger coherent slices, optionally uses independent workers of the selected model, and escalates a verified hard problem in **Solve Only** mode only under a dual-tier profile. In single-model mode it must not invent an expensive specialist. Validate at meaningful boundaries. Earlier tests are limited to foundational or high-risk dependencies. Passing results are not repeatedly rerun unless the tested area or relevant dependencies/environment changed. A specialist can request specific additional context; Luna authorizes it only within already-approved limits.
+The primary implements larger coherent slices, optionally uses independent workers of the selected model, and escalates a verified hard problem in **Solve Only** mode only under a dual-tier profile. In single-model mode it must not invent an expensive specialist. **The full accumulated test suite must not be run during implementation, including at the end of a GOAL.** Select direct changed-module tests and impacted dependencies only. Earlier tests are limited to scoped foundational or high-risk dependencies. Passing results are not rerun unless their covered source, dependencies, selectors or relevant environment changed. A specialist can request specific additional context; Luna authorizes it only within already-approved limits.
 
 GOALs may require a user action if the client must resume a paused session, request genuine permission, or resolve an architectural blocker. These are not manual model switches.
 
@@ -128,13 +129,13 @@ Compatibility Gate, then continue only the next remaining slice.
 Keep the plan and scope unchanged. Do not replay previous chat history.
 ~~~
 
-A sudden limit can prevent the outgoing agent from updating its final checkpoint. The incoming agent must reconcile the last persisted checkpoint with the actual code and mark uncertain work as unverified, not discard or duplicate it. Switching is **user-initiated** and subject to each provider's rules; neither platform's in-memory session transfers automatically.
+Carry only still-valid outcomes and invalidated **targeted test selectors** into the next platform; switching does not trigger a full regression suite. A sudden limit can prevent the outgoing agent from updating its final checkpoint. The incoming agent must reconcile the last persisted checkpoint with the actual code and mark uncertain work as unverified, not discard or duplicate it. Switching is **user-initiated** and subject to each provider's rules; neither platform's in-memory session transfers automatically.
 
 ### Completion and closure
 
-For each GOAL request a compact Execution Evidence summary: changed files, verified model routing when observable, subagent calls, tests, Expected Evidence results, and real blockers. Do not invent token counts.
+For each GOAL request a compact Execution Evidence summary: changed files, verified model routing when observable, subagent calls, **exact targeted selectors and results**, Expected Evidence, reusable passing evidence and real blockers. Do not invent token counts.
 
-After implementation, return to ChatGPT for a **Convergence Check** against the approved baseline and current code. ChatGPT prepares platform-neutral cleanup only after convergence, under `CLEANUP_HANDOFF.md`. Explicitly start the bounded **Cleanup GOAL** on a verified platform when ready; cleanup is never automatic.
+After implementation, return to ChatGPT for a **Convergence Check** against the approved baseline and current code, reusing relevant valid evidence. The growing suite remains available for a **separate post-implementation release/system validation gate** if requested or required; no GOAL or corrective loop triggers it automatically. ChatGPT prepares platform-neutral cleanup only after convergence, under `CLEANUP_HANDOFF.md`. Explicitly start the bounded **Cleanup GOAL** on a verified platform when ready; cleanup is never automatic.
 
 ## 7. Continuation and safety
 
