@@ -382,7 +382,7 @@ Every GOAL defines **Expected Evidence** that proves its requested behavior. Evi
 
 ### Efficient evidence and cross-platform reuse
 
-The index/handoff should hold **only** current GOAL selectors, observed outcome, relevant source/commit or dirty-state provenance, material test/config/environment dependencies, and invalidations. Do not maintain a growing ledger of historical test commands or repeated logs. When switching between Codex and Antigravity, the incoming agent compares real code/configuration with these provenance notes and executes **only newly invalidated/affected selectors**, never the entire suite as a resume ritual.
+The index/handoff should hold **only** selectors for the currently active authorized GOALs, observed outcomes, relevant source/commit or dirty-state provenance, material test/config/environment dependencies, and invalidations. Do not maintain a growing ledger of historical test commands or repeated logs. When switching between Codex and Antigravity, the incoming agent compares real code/configuration with these provenance notes and executes **only newly invalidated/affected selectors**, never the entire suite as a resume ritual.
 
 ### Execution Evidence
 
@@ -440,7 +440,7 @@ For **implementation-provider switches**, use the separate canonical `IMPLEMENTA
 
 ## 19. Portable implementation handoff and platform switching
 
-The user may deliberately switch implementation platforms during an unfinished GOAL, including when usage allowance is exhausted on one platform. The goal remains **one approved mission** with the same contracts, permissions, decomposition and Expected Evidence, regardless of which supported platform executes the remaining work. Platform selection does not change ChatGPT's planning authority or permit evasion of a provider's restrictions.
+The user may deliberately switch implementation platforms during **one unfinished GOAL or an explicitly authorized parallel GOAL batch**, including when usage allowance is exhausted on one platform. **Each GOAL keeps its own approved mission, status, dependencies and Expected Evidence** across the platform switch; concurrent GOALs remain separate missions under the same bounded authorization and canonical checkpoint. Platform selection does not change ChatGPT's planning authority or permit evasion of a provider's restrictions.
 
 ### Canonical execution checkpoint (minimal state, not transcript)
 
@@ -463,7 +463,7 @@ Omit empty/irrelevant fields and resolved history, previous failed approaches, h
 
 1. **Prepare on the outgoing platform when possible.** At a meaningful boundary, stop launching subagents, receive or terminate active work, and integrate/record each worker's outcomes. Quiesce active writers. For an abrupt usage-limit interruption, acknowledge that a final checkpoint may be impossible; the incoming platform reconstructs **only uncertain state** from the last checkpoint and real repository/working-tree evidence.
 2. **Preserve implementation bytes.** Prefer a coherent checkpoint commit for integrated source and the small handoff update **when safe and authorized**. If files remain uncommitted, list affected paths and ensure the incoming platform can access the same physical worktree or an explicitly exported patch. A Markdown handoff does **not** transfer unstaged files, ignored assets, unpushed commits, private build artifacts, or worktrees between devices.
-3. **User selects the next platform/profile.** Never silently switch accounts or providers, or automatically start another provider to work around usage restrictions. The user launches/resumes the new client's session in the repository and authorizes the current GOAL continuation.
+3. **User selects the next platform/profile.** Never silently switch accounts or providers, or automatically start another provider to work around usage restrictions. The user launches/resumes the new client's session in the repository and authorizes continuation of **the previously approved GOAL or bounded GOAL batch**, without expanding its scope.
 4. **Incoming platform verifies** plan root, canonical handoff, **all authorized active GOALs and their prerequisites**, branch/HEAD, uncommitted changes/patches, **accessible screenshots/visual artifacts**, missing generated state, existing writer processes/subagents and outstanding integration. Do not overwrite working files or change branches in a way that loses progress. If parent and child writers may both continue, obtain exclusive ownership or stop until the ambiguity is resolved.
 5. **Run only the incoming platform adapter's Compatibility Gate** (§10). Reuse verified model role/config when valid; do not rewrite the other platform's adapter or regenerate all agent files. If the chosen platform cannot safely meet a mandatory capability, request explicit approval for a supported fallback or stop.
 6. **Resume exactly once.** Change checkpoint to `RESUMING` then `ACTIVE` only after obtaining writer ownership and verifying the current code state. Reconstruct a ready queue from **only the already authorized GOAL set**, complete **only remaining slices**, and preserve safe concurrent ownership. Previously passing tests remain valid under §15's dependency and environment rules; run only invalidated/affected named tests **and never the full suite as a platform-resume check**.
@@ -509,6 +509,8 @@ These are documentation references, not a claim that an actual local client was 
 - [Codex hooks](https://developers.openai.com/codex/hooks)
 - [Codex multi-agent implementation](https://github.com/openai/codex)
 - [Antigravity custom subagents](https://antigravity.google/docs/subagents)
+- [Antigravity browser screenshot capture](https://antigravity.google/docs/screenshots)
+- [Antigravity built-in browser agent and surface limitations](https://antigravity.google/docs/commands/browser)
 - [Antigravity model selector](https://antigravity.google/docs/models)
 - [Antigravity rules and AGENTS.md](https://antigravity.google/docs/rules)
 - [Antigravity migration from workflows to skills](https://antigravity.google/docs/migration/workflows-to-skills)
