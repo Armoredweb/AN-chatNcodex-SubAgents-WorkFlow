@@ -12,6 +12,8 @@ The workflow repository defines the protocol; the consumer repository holds its 
 - The selected platform runs a **primary agent that both orchestrates and implements**. For Codex, prefer Luna High; for Antigravity, a verified Gemini Flash Medium-class configuration is a candidate. These are profiles, not permanent model names.
 - Support both **dual-tier mode** (economical primary/parallel workers plus optional stronger specialist) and **single-model mode** (same selected model for primary and parallel workers, no stronger specialist configured or assumed). Direct implementation remains the default in either mode.
 - The workflow optimizes **implementation readiness and useful implementation code produced by ChatGPT**, shifting complex reasoning away from the implementation platform. Favor code/pseudocode-rich plans over superficially short plans; minimize redundant prose and expensive rediscovery, not useful technical content.
+- **Orchestrate independent work proactively.** When multiple authorized, dependency-ready implementation slices or GOALs can proceed safely, the primary agent should normally delegate useful simple implementations to economical parallel workers and focus more of its time on routing, contracts, integration, and critical-path work; it may still implement directly when that is better.
+- **Route by capability proactively.** In verified dual-tier mode, delegate image/screenshot interpretation and genuinely high-risk or very complex fragments to an appropriately capable specialist before mistakes accumulate, not only after repeated failures. Always send a precise minimal evidence/context packet.
 - Execute **coherent implementation batches with selective, high-value validation**. The test repository may grow cumulatively, but during implementation run **only tests directly related to the active changes and their affected dependencies/consumers**—never the whole accumulated suite.
 - A GOAL is an autonomous, bounded implementation mission; plan files do not define agent sessions, commits, or test boundaries.
 - This protocol never authorizes bypassing product, account, safety, rate, security, or platform limits. A subagent is not an authorization bypass.
@@ -77,7 +79,7 @@ Dependency-oriented routing and traceability map: macroblocks, microsteps, order
 
 The matrix is **platform-profiled**: for each supported platform, record primary, worker and optional specialist roles, exact model IDs/versions and effort **when the interface exposes them**, otherwise the verified selector name/tier and its resolution limitation; client/surface/version, verification date, permitted fallbacks, routing constraints, and unavailable features. Include `single-model` and `dual-tier` modes and platform-specific parallelism limits. Never invent exact IDs from display labels or assume tiers map to fixed versions. Revalidate material runtime differences before execution. Never encode models, platforms, or mutable assignments in Plan Part filenames.
 
-Each GOAL entry identifies primary-implementer ownership, parallel candidates, optional dual-tier specialist triggers, delegation envelopes, integration, **batch-level selective validation boundaries**, relevant test targets/selectors and dependency impact, plus reusable previously passing evidence. There is no cumulative per-GOAL list of all historical tests. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
+Each GOAL entry identifies primary-implementer ownership, **intra-GOAL parallel slices and cross-GOAL concurrency candidates**, prerequisites/critical-path gates, worker write ownership and shared-resource conflicts, optional dual-tier **proactive visual/high-risk/complexity routing** and blocker triggers, minimum delegation packets, integration, **batch-level selective validation boundaries**, relevant test selectors/dependency impact, plus reusable previously passing evidence. There is no cumulative per-GOAL list of all historical tests. `UNASSIGNED` may exist during early decomposition only; none may remain at implementation handoff.
 
 ### Plan Parts
 
@@ -86,9 +88,9 @@ Filename/path describe stable work identity, not Luna/SOL assignment. A Plan Par
 - fixed decisions, non-goals, invariants, types, state, ownership/lifetime, and contracts;
 - **substantial concrete source code, function bodies, interfaces, implementation skeletons, or detailed executable-style pseudocode** for non-trivial mechanisms, including algorithms, call sequences, data flow, and migration order;
 - failure/retry/cancellation, races, persistence, resource/performance and cleanup behavior expressed in the proposed implementation where useful;
-- dependencies, writable ownership, independent/parallel slices, integration boundaries;
+- dependencies, writable ownership, **cross-component and cross-GOAL independence**, safe parallel slices, critical-path dependencies, isolation requirements, integration boundaries;
 - **essential scoped test targets/commands**, impacted dependencies, and objective Expected Evidence **at shared batch/GOAL validation boundaries**; do not request the full project test suite or an automatic test per part;
-- a proposed specialist trigger and minimal context only when justified.
+- **proactive specialist/visual-review triggers** for objectively difficult, high-risk, or perception-heavy tasks plus a minimal evidence/context envelope when justified; dynamic blocker escalation remains a fallback.
 
 **Default toward more useful implementation code, not less.** If ChatGPT has enough verified source and decisions to draft a correct implementation, provide it. Prefer code that can be adapted or implemented directly over prose describing what the primary implementer should invent. Use precise pseudocode when exact source would require unverified APIs or would lock in an unjustified detail. Explain integration points, ownership, and assumptions. Code volume is not itself a goal: omit boilerplate, existing unchanged code, speculative unverified implementations, and irrelevant examples.
 
@@ -101,8 +103,8 @@ Compact operational checkpoint: verified baseline, phase, last completed unit, r
 ### IMPLEMENTATION_HANDOFF.md — portable execution authority
 
 The **single canonical implementation handoff** for new planning cycles. It contains both:
-1. **Approved stable contract:** verified repo/base, plan root/index, platform-neutral GOAL order and foundational gates, approved Agent Capability Matrix (per-platform profiles and single/dual-tier modes), allowed writes, delegation, escalation and testing/Expected Evidence rules.
-2. **Compact mutable execution checkpoint:** active/last platform and selected model profile, current GOAL, completed and remaining coherent steps, active/pending work, exact code baseline and dirty working-tree provenance, relevant tests and evidence validity, pending integration/locks/worktrees, blockers, and **one precise next safe action**. Update this small section at meaningful checkpoints and before switching platforms, not for every microstep.
+1. **Approved stable contract:** verified repo/base, plan root/index, platform-neutral **GOAL dependency graph and explicitly authorized runnable GOAL set** (including allowed concurrency), foundational gates, approved Agent Capability Matrix (per-platform profiles and single/dual-tier modes), allowed writes, task/capability routing, delegation, escalation and selective testing/Expected Evidence rules.
+2. **Compact mutable execution checkpoint:** active/last platform and model profile, **active GOAL set** with concise per-GOAL completed/running/remaining slices, integration owner and in-flight workers/worktrees, exact code baseline and dirty working-tree provenance, relevant tests/evidence validity, conflicts/locks, blockers, and **one next safe action per active GOAL or critical integration boundary**. Update this small section at meaningful checkpoints and before switching platforms, not for every microstep.
 
 `IMPLEMENTATION_HANDOFF.md` is the **sole portable source for current implementation state**. `PLAN_INDEX.md` owns the approved task graph; `CHAT_HANDOFF.md` owns ChatGPT conversation continuity. Never duplicate mutable implementation state in either. For pre-existing cycles, `CODEX_HANDOFF.md` may remain as a **read-only compatibility pointer** to the canonical portable handoff; migrate its active state once and avoid parallel authorities.
 
@@ -126,7 +128,7 @@ Routine technical choices that follow an approved architecture can be resolved i
 
 ## 7. Decomposition and the bidirectional audit gate
 
-Decompose the approved master into coherent macroblocks, microsteps, dependencies, outputs, cross-domain contracts, and provisional neutral Plan Part paths. Preliminary roles are **primary direct**, **parallel worker**, **optional specialist candidate** (dual-tier only), or **UNASSIGNED**.
+Decompose the approved master into coherent macroblocks, microsteps, dependencies, outputs, cross-domain contracts, and provisional neutral Plan Part paths. Identify the **critical path and independently runnable components**, including safe cross-GOAL concurrency. Preliminary roles are **primary direct/integration**, **economical parallel implementation worker**, **proactive visual/high-risk/complex specialist candidate** (dual-tier only), or **UNASSIGNED**. Serial order in the index must encode real dependencies, not merely the order in which plans were written.
 
 At the **first completed decomposition**, persist the index and stop for a user checkpoint even if Continuous Mode is enabled. This checkpoint allows review of broad scope before detailed expansion. One subsequent user continuation authorizes the audit and following approved planning work; it is not a demand to approve every microstep.
 
@@ -136,7 +138,7 @@ Before expansion:
 1. Fresh-read persisted `MASTER_PLAN.md` and `PLAN_INDEX.md`.
 2. Trace **every** implementation-relevant requirement, decision, invariant, non-goal affecting scope, compatibility expectation, and dependency *forward* to index work or an explicit no-work reason.
 3. Trace **every** material index item *backward* to approved intent or verified current-source necessity.
-4. Check missing bridges, ordering, duplicated ownership, parallel dependencies, overfragmentation, and agent-neutral paths.
+4. Check missing bridges, **false dependencies that serialize independent GOALs**, missing safe parallel opportunities, ordering, duplicated ownership, shared-resource risks, overfragmentation, and agent-neutral paths.
 5. Repair at the owning artifact, persist coherently, and re-read both from GitHub for another complete pass.
 6. Advance only after a full clean pass or stop at a real blocker.
 
@@ -151,7 +153,7 @@ For each substantial Plan Part:
 4. Resolve meaningful alternatives in ChatGPT, recording only implementation-relevant reasoning and sources.
 5. **Write the implementation before merely describing it** when enough source evidence exists: provide concrete data types, function signatures and bodies, sequences, error handling, and integration code where useful; otherwise give sufficiently precise pseudocode with explicit assumptions. Do not remove working implementation detail to make a Plan Part shorter.
 6. Specify migration, failure/concurrency cases, observability, integration, and the **smallest explicitly selected affected-test set** proving the relevant GOAL/batch outcomes. Existing test suites may accumulate as permanent project assets, but do not add per-part run requirements or include unrelated historical tests in a GOAL.
-7. Mark independent work and potential specialist calls only when useful.
+7. Mark **ready-in-parallel work both within a GOAL and across independent approved GOALs**; classify implementation roles by simple/independent versus visual/complex/high-risk capability. Specify the smallest useful specialist evidence package when needed.
 
 ### Code-first planning policy
 
@@ -173,13 +175,13 @@ Remove filler, outdated rationale, duplicated explanations, ambiguous choices, a
 
 ### Pass B — Specialist Minimization and Agent Routing
 
-Challenge **every** planned stronger-model call: can better source evidence, scope reduction, a concrete interface, algorithm, code snippet, or dependency resolution make the economical primary agent capable? Retain specialist calls only when a material residual difficulty remains **in the selected dual-tier profile**. A single-model profile has no automatic stronger-model escalation; a true capability blocker requires explicit user approval to change mode/profile/platform. Decide **Solve Only** before **Scoped Implementation** unless the latter is clearly necessary.
+Challenge **every** planned stronger-model call against actual required capability and consequences of error. Better source evidence, scope reduction, algorithms, code or pseudocode should remove avoidable expensive calls, **but do not force an economical model to perform perceptually difficult screenshot/image analysis or genuinely high-risk/complex implementation** merely to minimize specialist count. In a verified dual-tier profile, retain **proactive** specialist analysis/implementation where the quality or failure cost justifies it; also retain justified blocker escalation. A single-model profile has no automatic stronger-model escalation; a true capability blocker requires explicit user approval to change mode/profile/platform. Decide **Solve Only** before **Scoped Implementation** unless the latter is clearly necessary.
 
-Audit parallel slices for genuine independence, coordination cost, shared state, file ownership, and integration ordering. No automatic one-part-one-subagent or one-part-one-test mapping. Verify that concurrent agents cannot accidentally launch overlapping test suites or compete for shared test resources.
+Audit **ready GOALs and independent slices across GOAL boundaries**, not just parallel work inside one GOAL. Challenge avoidable serial execution and preferentially route useful simple implementation to economical workers so the primary orchestrates/integrates and implements critical-path or tightly coupled work. Check dependencies, context overhead, files, shared state, worktrees, concurrent resource limits, integration order and tests. No one-part-one-subagent or one-part-one-test mapping. Concurrent agents must not launch overlapping suites or compete for shared test resources.
 
 ### Pass C — Cross-artifact Consistency Gate
 
-Audit `MASTER_PLAN → PLAN_INDEX → Plan Parts → current repository` in both directions for requirements, interfaces, states, ownership, contracts, dependencies, migration, **test impact mappings and exact selective test selectors**, and approved decisions. Add cross-agent checks: **platform-neutral contracts**, profile-specific effective model/tier routing, delegation inputs/outputs, allowed reads/writes, concurrent writes, integration, specialist permissions, **cross-platform checkpoint/resume**, and Expected Evidence.
+Audit `MASTER_PLAN → PLAN_INDEX → Plan Parts → current repository` in both directions for requirements, interfaces, states, ownership, contracts, dependencies, migration, **test impact mappings and exact selective test selectors**, and approved decisions. Add cross-agent checks: **platform-neutral contracts**, planned GOAL readiness/concurrency (no false dependencies), **visual artifact accessibility and specialist suitability**, proactive high-risk routing, profile-specific effective model/tier, minimal delegation envelopes, shared write ownership, integration, permissions, **multi-GOAL cross-platform checkpoint/resume**, and Expected Evidence.
 
 Repair contradictions in the **owning canonical artifact** (architecture → master, decomposition/routing → index, mechanism → part), propagate downstream, then repeat until a complete clean pass or real blocker. Do not hide contradictions by patching handoffs alone.
 
@@ -187,11 +189,11 @@ Repair contradictions in the **owning canonical artifact** (architecture → mas
 
 Build meaningful Implementation Batches; mark foundational GOALs whose evidence gates dependent work. A GOAL may reference many Plan Parts. For each GOAL include:
 - bounded mission, current-to-target delta, dependencies, authorized modifications;
-- direct primary-agent steps, optional independent worker tasks and ownership;
-- justified specialist triggers and smallest initial delegation packet **only in a supported dual-tier profile**;
+- **parallel-ready GOAL/slice prerequisites**, worktree/shared-resource ownership, direct primary critical-path/integration work, and delegated simple independent implementation tasks;
+- **proactive visual/complex/high-risk specialist assignments** plus justified blocker triggers and the smallest initial **artifact-aware** delegation packet **only in a supported dual-tier profile**;
 - integration sequence, rollback/recovery rules, **a substantial implementation batch followed by only its changed/affected tests at a meaningful boundary**, and Expected Evidence. Provide exact selective test targets/commands where known, including direct dependencies and impacted consumers. List earlier tests only for justified risk/foundational gates; do **not** include or run the whole accumulated suite during any implementation GOAL.
 
-Confirm the per-platform capability matrix and compatibility/bootstrap obligations, then persist `IMPLEMENTATION_HANDOFF.md` as the shared execution contract and initial checkpoint. The user explicitly selects a platform/profile and starts implementation; planning approval is not implementation-start authorization.
+Confirm the per-platform capability matrix and compatibility/bootstrap obligations, then persist `IMPLEMENTATION_HANDOFF.md` as the shared execution contract and initial checkpoint. **Explicitly label which GOALs may run concurrently** and which require validated predecessors. The user selects a platform/profile and authorizes the implementation GOAL(s) or a bounded batch/queue: approval to start **one** GOAL does not automatically authorize starting all others.
 
 ## 10. Platform profiles, agent configuration, and compatibility
 
@@ -200,7 +202,7 @@ Confirm the per-platform capability matrix and compatibility/bootstrap obligatio
 ### Runtime role profiles
 
 - **Dual-tier:** economical primary implementer and economical parallel workers, with an optional stronger specialist used only for justified hard problems. Codex candidate: Luna High primary/workers and SOL High specialist. Antigravity candidate: a verified **Gemini Flash Medium**-class primary/parallel configuration and a verified more capable model/tier for specialists.
-- **Single-model:** one verified model for the primary implementer **and workers**. Parallelism may use clones or explicitly configured same-model agents; no specialist tier is assumed. If a genuinely difficult fragment exceeds this profile, return a blocker or request explicit approval for a profile/platform change.
+- **Single-model:** one verified model for the primary implementer **and workers**. Parallelism may use clones or explicitly configured same-model agents; no stronger specialist tier is assumed. The agent still proactively delegates safe parallel tasks. If a visually demanding, high-risk, or complex fragment exceeds this profile's actual capabilities, request an approved profile/platform change or report a blocker; never silently invoke a stronger tier.
 - **Model identifiers:** Plan exact IDs/versions and reasoning effort **when supported by the surface**. Otherwise record the exact UI label, tier, available effort, and `effective_model_unverified` rather than inventing an ID. A named Gemini Flash variant can change; verify current available models and user entitlements at bootstrap.
 
 The stable Plan Parts must not depend on platform tools, prompt syntax, agent IDs, vendor-specific model strengths, or live session state. The capability matrix describes how the same GOAL is executed on each platform.
@@ -225,7 +227,7 @@ For the user-selected platform, before GOAL start or after a cross-platform tran
 1. Verify repo, branch/HEAD, working tree, current handoff, approved write scope, installed client/surface/version, workspace trust, permissions and relevant pre-existing config.
 2. Inspect **only that platform's** instruction/config files and effective model selection. Preserve all unrelated existing files and configurations, including the other platform's agent files.
 3. Bootstrap only roles necessary for the selected profile: Codex `.codex/...`; Antigravity `.agents/agents/...`; shared `AGENTS.md` only when authorized. Never create unused specialist definitions in single-model mode.
-4. Validate schema/discovery, necessary tools, sandbox/approval behavior, concurrency cap, and a small real role invocation if needed. Confirm effective model/effort where observable; distinguish verified identifiers, UI labels and unresolved model-tier mappings.
+4. Validate schema/discovery, necessary tools, sandbox/approval behavior, concurrency cap, and a small real role invocation if needed. **Verify actual agent support for accessing image artifacts/screenshots**, not merely that the underlying model is advertised as multimodal. Confirm effective model/effort where observable; distinguish verified identifiers, UI labels and unresolved model-tier mappings.
 5. Confirm the selected platform can read the portable handoff and complete at least a non-destructive resume readiness check. If an agent requires new session/config reload, checkpoint and request the user to resume explicitly.
 6. Record platform, profile, effective capabilities, restrictions, test outcome and next step in `IMPLEMENTATION_HANDOFF.md`. Rerun compatibility only after platform switch or meaningful changes, not every step.
 
@@ -233,7 +235,7 @@ If routing is uncertain, **do not claim** a stronger model was invoked or silent
 
 ### Shared rules and precedence
 
-Review applicable `AGENTS.md`, `GEMINI.md`, `AGENTS.override.md`, global/project rules and local platform config rather than overwriting them. The canonical work plan and portable handoff own the GOAL contract; vendor-specific rules contain minimal operational instructions only. Do not let conflicting platform adapters silently revise approved architecture, model/profile, test policy, or scope.
+Review applicable `AGENTS.md`, `GEMINI.md`, `AGENTS.override.md`, global/project rules and local platform config rather than overwriting them. The canonical work plan and portable handoff own the GOAL contract; vendor-specific rules contain minimal operational instructions only. At bootstrap, where supported, give the primary a **short durable instruction to scan the ready GOAL/slice graph, dispatch independent economical workers proactively, route verified visual/high-risk work by capability, and integrate results**. Do not copy all planning documents into agent configurations. Do not let conflicting platform adapters silently revise approved architecture, model/profile, test policy, or scope.
 
 ## 11. Minimal Context Delegation protocol
 
@@ -243,68 +245,117 @@ Each dispatch must contain **only**:
 - task/role and why delegation is justified;
 - GOAL and bounded desired result;
 - exact relevant Plan Part sections/contracts and verified repository paths/symbols;
+- **for visual work, the actual accessible image/screenshot artifact path or supported attachment reference, affected UI state/frame/region, expected-versus-observed behavior, and a precise visual question** (a primary agent's text summary is not a substitute for seeing the image);
 - concise observed failure/diagnosis if applicable;
 - allowed reads and writes, prohibited scope, and shared-state constraints;
 - expected deliverable and validation criteria;
 - progressive context request procedure.
 
-Do not forward complete chat histories, whole plans, unrelated modules, large logs, or raw research. Source references should be precise enough that a subagent does not need to rediscover ownership.
+Do not forward complete chat histories, whole plans, unrelated modules, large logs, or raw research. Source references should be precise enough that a subagent does not need to rediscover ownership. **For implementation workers**, supply the concrete proposed code/interfaces and allowed files so they can write directly. **For specialists**, provide the real minimal image/reproduction/contract and restrict unrelated reads; use native artifact handles instead of inflating prompts with image encodings when supported.
 
 **Progressive context:** the subagent requests the specific additional file, symbol, or evidence and explains why its current packet is insufficient. The primary implementer may approve necessary operational expansion **within previously approved architectural and permission boundaries**. If approval would change architecture, unrelated write scope, security posture, or user authorization, stop and escalate to the user/ChatGPT.
 
 A scope instruction is **not enforced filesystem isolation**. Agents may share tools, permissions, and workspace. Use actual sandbox/worktrees or external enforcement when strict isolation is required. Hooks may optionally add defense in depth after validation; do not claim they enforce all tool paths.
 
-Subagent returns are compact and actionable: root cause or result, precise change/solution, relevant changed files, tests/evidence, limitations, and any unresolved request. The parent retains integration ownership.
+Subagent returns are compact and actionable: root cause or result, precise change/solution, relevant changed files, **for visual findings exact screen region and observed discrepancy**, scoped tests/evidence, limitations, and any unresolved request. The parent retains integration ownership. Avoid a second specialist pass unless the result is materially ambiguous, the artifact changed, or the risk requires independent verification.
 
-## 12. Parallelism, file ownership, and integration
+## 12. Proactive parallel orchestration, GOAL scheduling, and integration
 
-The active primary implementer decides whether parallelism actually improves the mission. Parallel work is useful for disjoint subsystems, independent investigations, or independent read-only reviews; trivial or tightly coupled tasks remain direct.
+**Orchestrator-first when concurrency is useful:** the primary agent is not required to personally implement every available task. For two or more non-trivial **independent ready** slices, preferentially spawn economical implementation workers while the primary coordinates contracts, dependency readiness, integration, outstanding high-risk decisions, and the critical path. The primary may also implement an independent critical-path/tightly coupled slice while workers execute elsewhere. Avoid both extremes: serially implementing everything alone, or spawning agents for negligible work whose setup/coordination costs exceed the benefit.
 
-Before spawning workers, record:
-1. Dependency prerequisites and immutable upstream contracts.
-2. File/module ownership and allowed writes.
-3. Shared state: generated files, caches, databases, test fixtures, build directories, ports, locks, and migrations.
-4. Integration owner, timing/order, merge plan, and **one selected affected-test boundary** for the integrated changes rather than a test run per worker, Plan Part, or unrelated module.
-5. Concurrency ceiling and stop/failure procedure.
+### Two levels of parallelism
 
-Read-only exploration can overlap widely if useful. Write tasks require non-conflicting ownership and compatible shared resources. Different source files do **not** automatically mean independent tasks. Where practical, use isolated worktrees/branches for writes that cannot safely share a workspace; otherwise serialize.
+1. **Within one authorized GOAL:** dispatch independent components or steps concurrently if their interfaces and file ownership are stable.
+2. **Across multiple authorized GOALs:** dispatch GOALs in parallel **only if the user has explicitly authorized the implementation batch/GOAL set** and their prerequisites, write ownership, and shared-resource gates allow it. An order in the index is not automatically a dependency; an architectural/foundational dependency is a hard gate until its evidence is valid. Never start unapproved GOALs just because they are ready.
 
-Workers do not independently redesign architecture, modify another worker's files, overwrite user edits, or create unrelated commits. Prefer the active primary implementer to integrate, review diffs, run integration tests, and produce coherent commits. If a worker fails, retain validated independent progress and repair the relevant boundary, not the whole GOAL.
+At each meaningful dispatch boundary, classify available work:
+- **Economical worker implementation:** simple, bounded, well-planned coding in independent components; use two or more concurrent workers when their expected time savings exceed context/coordination overhead.
+- **Primary direct work:** integration, shared contracts, critical-path changes, conflict resolution, or a small/serial task best completed immediately.
+- **Proactive capable specialist:** actual image/screenshot perception, non-trivial visual layout diagnosis, very complex algorithms, or high-risk contracts/implementation under §13 and a verified dual-tier profile.
+- **Blocked/serial:** missing approvals, unmet prerequisites, shared writes/resources without safe isolation, unsupported capabilities or uncertain integration.
 
-## 13. Planned and dynamic specialist escalation
+### Ready-work scheduler (normative pseudocode)
 
-Default: the selected profile's primary agent implements from the ChatGPT plan. A stronger specialist is **optional in dual-tier mode** and exceptional, never a routine reviewer of every file. Single-model mode has no automatic capability escalation; use its primary model also for worthwhile parallel workers.
+```text
+authorized := user_approved_goals_or_batch
+ready := tasks_in(authorized) where prerequisites_have_valid_evidence
+for task in ready:
+    if shared_write_or_runtime_conflict(task): serialize_or_isolate(task)
+    else if verified_visual_or_high_risk_specialist_needed(task):
+        route_narrow_specialist_task(task)    // dual-tier only, per §13
+    else if independent_substantial_work(task) and worker_capacity_available:
+        dispatch_economical_worker(task, minimal_context_packet)
+    else:
+        primary_implements_or_integrates(task)
 
-### Planned escalation
+as_workers_finish:
+    collect_compact_evidence_and_diffs()
+    integrate_with_exclusive_write_ownership()
+    run_only_affected_selective_tests()
+    mark_dependency_ready_only_after_required_evidence()
+    dispatch_newly_ready_authorized_tasks()
+```
 
-A Plan Part/GOAL may authorize a specialist for a narrowly defined difficult fragment with prerequisite evidence, minimal input contract, permitted model/effort, allowed reads/writes, and expected return. If the plan itself makes the fragment mechanical for the economical primary implementer, remove the escalation in Pass B.
+This is a **continuous ready-queue**, not a one-time decision at GOAL start. Reassess after a completed dependency, worker return, integration, blocker removal, or newly available independent task. Reuse an idle suitable worker where supported instead of unnecessarily starting a fresh session.
 
-### Dynamic escalation
+### Safe concurrent writes and cost controls
 
-When the active primary agent in a **dual-tier profile** hits a blocker:
-1. Classify ordinary build/test error, missing evidence, plan defect, platform/permission boundary, or genuinely difficult reasoning.
-2. Perform bounded diagnosis and materially different repairs using available plan/source evidence; do not require a fixed number of artificial retries.
-3. Escalate only when a durable blocker remains or the problem is demonstrably too difficult to solve safely at the active primary model's capability.
-4. Send a minimal packet with repro, observed evidence, bounded attempts, and exact contract. Do not recreate the entire failed investigation.
-5. Prefer **Solve Only**: specialist diagnoses and returns a precise patch/algorithm/contracts for the primary implementer to apply and test.
-6. Use **Scoped Implementation** only when the primary implementer demonstrably cannot reliably implement the fragment; restrict changes to explicitly allowed paths and integrate through the primary.
-7. If the result fails, provide only the **new evidence** to the same specialist when available; avoid an unbounded chain of fresh expensive agents.
+Before dispatch, establish each task's immutable upstream contracts, exact writable paths, generated files, database/migration state, build outputs/caches, ports, tests, worktree/branch owner, and integration order. **Different files are not necessarily independent.** Use isolated worktrees or branches when required and supported; otherwise serialize conflicting writers. Worker scopes in prompts are not technical sandboxes.
 
-No specialist may unilaterally alter approved architecture, ownership, safety constraints, authorization scope, or a foundational contract. For a real plan contradiction, pause the affected dependent work and return to ChatGPT/user for an approved correction. In **single-model mode**, use bounded primary-agent diagnosis; if it cannot progress, checkpoint and request an approved change instead of silently invoking a stronger tier. Avoid indefinite retries, busy waiting, and silent fallbacks.
+The primary is the **single integration/commit coordinator**. Workers should not independently change foundational contracts, merge conflicting branches, or create unrelated commits. Merge/apply only verified worker outputs; protect pre-existing user changes. Coordinate selective test runs so workers do not run conflicting or duplicate suites. Prefer a **single scoped post-integration validation** for related worker outputs, plus earlier targeted checks only at real foundational/safety boundaries (§15).
 
-## 14. Autonomous GOAL execution
+Choose concurrency based on actual task independence, expected elapsed time, available workers, resource contention and measured context/token overhead; **do not use a fixed agent count as a goal**. A few economical workers may accelerate simple modules; more workers are not automatically better. Keep parent context lean: worker task packets and terse results, not full logs or transcripts. On a failed worker, preserve unrelated validated progress and repair the affected slice.
 
-Starting a GOAL is a user action. Once started with a verified platform/profile:
-1. The **active primary implementer** reads `IMPLEMENTATION_HANDOFF.md`, relevant `PLAN_INDEX.md` and Plan Parts (not all by default), confirms repo/HEAD/working tree and its authorized scope.
-2. Recover only the **remaining** coherent steps and prerequisites from the portable checkpoint; verify that previously marked completed work is reflected in code and still-valid Expected Evidence. Do not redo settled work.
-3. **Implement substantial coherent slices using Plan Parts' code/pseudocode**; do not reopen settled architecture or test each microstep.
-4. Delegate useful independent work under the current profile. In dual-tier mode, escalate hard blockers when justified. In single-model mode, do not fabricate a stronger specialist.
-5. Run **only explicitly selected tests of this batch's changed code and affected dependencies/consumers**, enough to prove Expected Evidence. Do **not** run the full accumulated suite during implementation or at GOAL completion. Earlier scoped checks are allowed only for foundational, destructive, high-risk, or diagnostic necessity.
-6. After a failure, repair and rerun only failed/impacted selectors; preserve still-valid passing results. Never respond to a targeted test failure by automatically launching the full suite.
-7. At **meaningful durable boundaries** (completed integration slice, validated foundational milestone, before a planned platform switch, or when an interruption is foreseeable), update the **small mutable execution checkpoint**. Do not record every edit or generate ceremonial commits.
-8. Report final evidence/changes/blockers concisely, preserving a verified next action if unfinished. A GOAL completes only when its acceptance contract is met.
+## 13. Capability-aware proactive specialist routing and escalation
 
-Do not stop merely for ordinary build/test errors. Do stop at authorization/security/platform boundaries, an invalid architecture, or a genuine unresolved blocker. A user-triggered resume/new session may be needed after a provider limit or compatibility setup. **A new platform resumes from persisted repository state, not from the previous platform's conversation or subagent state.** It must not automatically claim still-running writes, uncommitted worktrees, or unknown tests as completed.
+The primary **must evaluate task difficulty and evidence modality before attempting the work**, not only after it fails. In a verified **dual-tier** profile, it may proactively route a genuinely demanding fragment to a stronger specialist when the expected improvement in correctness, perception or risk reduction justifies cost. The goal is **minimum total time/tokens to a correct result**, not minimum specialist calls.
+
+### Proactive specialist triggers
+
+- **Visual perception and UI inspection:** a real screenshot, rendered UI, image composition, visual regression, alignment, layering, clipping, missing/doubled elements, color or shader artifact, animation frame, or comparison with an approved visual target, **when subtle visual differences matter**. Prefer a vision-capable stronger agent that can access the original image/capture. The primary can do routine obvious checks; do not escalate every trivial screenshot.
+- **High-risk work:** security/authentication boundaries, irreversible persistence or migrations, update-signing/security-sensitive distribution, complex synchronization/data races, memory safety, or other work where a subtle error has material cost. Request a focused pre-implementation risk/contract review or direct scoped implementation if justified.
+- **Very complex work:** tightly coupled algorithms, difficult cross-component state and ownership, performance-sensitive synchronization, nuanced platform compatibility, or mechanisms where a strong specialist is likely to avoid expensive redesign/retries.
+- **Demonstrated blocker:** a hard issue that remains after bounded, materially different primary-agent diagnoses; ordinary compile/test failures are not triggers.
+
+The plan/index should **preidentify** high-risk, visual and difficult fragments and specify timing, image/artifact access, minimal contracts and expected specialist return. The primary may add a new justified narrow call when real execution reveals a task's visual/risk/complexity demands; it must not expand approved architecture, permissions, or user scope.
+
+### Specialist task modes
+
+1. **Visual Review / Diagnose Only (preferred for perception):** inspect the actual accessible image(s) or screenshot(s), compare to the stated expected state, identify precise regions/differences and likely causes, and return an actionable verdict with confidence/uncertainty and relevant source symbols if known. The primary or economical worker implements and performs a **targeted new capture/verification** when the image changes.
+2. **Solve Only (preferred for complex logic/risk):** examine a tightly bounded problem and return precise architecture-compatible algorithms, code/pseudocode, patch instructions, failure analysis or risk mitigations for the primary/worker to implement.
+3. **Scoped Implementation:** specialist directly implements the hard fragment when direct execution by economical agents is unlikely to be reliable or would cause expensive iteration. Define exact read/write ownership, interfaces and integration checks beforehand.
+
+**Visual handoff must actually include or grant access to the source image.** Provide the artifact path/reference, UI/view resolution and state, frame/viewport/region where possible, expected outcome and a focused question. Do not send only a cheap model's textual description or ask the specialist to search the entire repository for a screenshot. Check model **and client/tool** image-input support before dispatch. For browser-only captures, use a verified supported browser/image tool; if no agent can receive the pixels, report the limitation or obtain the missing artifact, never fabricate visual analysis.
+
+A stronger specialist is not required to review every visual iteration or all code. One high-value narrow pass is usually better than repeated generic audits. Reserve additional review for material new evidence, changed imagery, unresolved ambiguity, or a genuine safety gate. Return concrete findings and file/symbol references; primary integrates outcomes and owns selective tests (§15).
+
+### Dynamic escalation and bounded recovery
+
+When an unforeseen blocker appears:
+1. Identify whether it is routine implementation failure, missing information, unsupported tool/image capability, an architectural contradiction, or true high-complexity/high-risk work.
+2. Attempt bounded diagnosis and meaningful distinct repairs when appropriate; **do not wait through artificial retries** if risk or perceptual difficulty is already clear.
+3. Select the smallest suitable specialist role and preferred mode; send the precise reproduction, observed evidence, attempted approaches that matter, exact paths, contracts, expected result, and allowed writes.
+4. If the result fails, send **only new evidence** to the same agent when possible; avoid indefinite escalation loops or repeatedly re-reading the repository.
+5. If specialist capability or permission is unavailable, checkpoint the affected task and request an approved fallback while unrelated authorized work may continue safely.
+
+**Single-model mode:** proactively parallelize independent work with same-model workers, but **do not silently invoke a stronger tier**. The primary may use any verified vision capability of the selected single model; if its capability is insufficient for a required visual/high-risk contract, request user-approved profile/platform change or report a blocker. Avoid pretending that routing alone upgrades perception.
+
+No specialist may unilaterally modify approved architecture, scope, security rules or foundational contracts. Escalate a genuine architectural change to ChatGPT/user, not to the specialist's discretion.
+
+## 14. Autonomous GOAL and authorized batch execution
+
+Starting implementation is a user action. **The user may authorize one GOAL or a bounded GOAL batch/queue.** Once the selected platform/profile is verified, the primary may coordinate **multiple approved independent GOALs at the same time**, without user prompts between their normal internal stages. Authorization to start only G01 is **not** authorization to start G02.
+
+1. Read `IMPLEMENTATION_HANDOFF.md`, the GOAL dependency graph in `PLAN_INDEX.md`, and **only** relevant Plan Parts. Verify branch/HEAD, current worktrees and approved concurrent GOAL set.
+2. Recover remaining tasks, already integrated work, still-valid Expected Evidence and unresolved worker states. **Do not replay completed work** or automatically assume an interrupted worker finished.
+3. **Build the ready task queue across authorized GOALs** (§12). Validate true dependency/foundational gates. Dispatch useful simple independent implementations to economical workers **proactively**, without serializing all components through the primary. The primary coordinates, integrates and may implement critical-path or tightly coupled work concurrently.
+4. **Route before mistakes:** in dual-tier mode, call a verified strong visual reviewer for subtle image/screenshot work or a capable specialist for clearly high-risk/very complex fragments (§13). Prefer precise Review/Solve Only where sufficient; use narrowly scoped specialist implementation when justified.
+5. Integrate worker outputs under exclusive ownership and run **only explicitly selected tests of affected code and its dependencies/consumers** (§15). No full suite at GOAL completion or between parallel GOALs. On failures, repair and rerun only invalidated selectors; preserve valid evidence for other work.
+6. Mark a GOAL or dependency done **only** when its own acceptance contract is proven. Unblock newly ready authorized GOALs immediately when it is safe; do not wait for unrelated GOALs to finish merely to advance independent work.
+7. Persist a compact **multi-GOAL execution checkpoint** at meaningful integrated milestones, before a platform switch or likely interruption: active/blocked/finished GOALs, worker ownership/worktrees, integrated commits/dirty state, still-valid evidence and next ready action(s). Avoid a microstep log and gratuitous commits.
+8. Report each completed GOAL's changes, focused evidence and remaining blockers concisely. Keep other independent, authorized work progressing if an isolated task is blocked; stop at genuine safety/approval/platform boundaries.
+
+Do not automatically escalate a routine compile/test failure or add unapproved GOALs. Context and usage limits still apply; a new platform resumes from persisted repo/handoff state, **not** internal agent memories or old sessions. Preserve exclusive writers and check whether screenshots/artifacts and uncommitted branches are actually available before resuming visual or parallel work.
 
 ## 15. Selective implementation testing, Expected Evidence, and observability
 
@@ -314,9 +365,9 @@ Every GOAL defines **Expected Evidence** that proves its requested behavior. Evi
 
 ### Scoped test selection — mandatory for every implementation GOAL
 
-1. **Determine actual changes first.** Build a small impact map from edited/added modules, public interfaces, changed test code, relevant generated artifacts, shared contracts, and transitive dependencies/consumers that could be affected.
+1. **Determine actual changes first** for the relevant **worker slice, integrated GOAL, or independent GOAL group**, not the whole repository. Build a small impact map from edited/added modules, public interfaces, changed test code, relevant generated artifacts, shared contracts, and transitive dependencies/consumers that could be affected.
 2. **Select test targets explicitly.** Run only tests for the changed functionality plus tests for genuinely affected dependencies/integration boundaries. Prefer named test cases, files, packages, modules, fixtures or filtered integration scenarios. Never select all test directories simply because the suite exists.
-3. **Choose one meaningful validation boundary.** Favor implementing and integrating a coherent large slice before running its selected tests. A Plan Part, microstep, subagent delivery, commit or single file edit does not by itself mandate any test execution.
+3. **Choose a meaningful coordinated validation boundary.** Favor implementing and integrating a coherent large slice before running selected tests. Multiple parallel worker outputs affecting the same component should share one scoped integration check, not competing duplicate runs. A Plan Part, microstep, subagent delivery, commit or single file edit does not by itself mandate a test run.
 4. **Check command scope before launching.** Use known test filters or package/target arguments. Avoid unfiltered project-wide commands such as `pytest`, `cargo test`, `go test ./...`, `ctest` without selection, `npm test` scripts that invoke every package, or equivalent commands **unless a specific filtered invocation has been verified**. Review script aliases and task runners to ensure that a seemingly targeted command does not launch the whole suite.
 5. **Never use full-suite fallback during implementation.** If impact is uncertain, inspect only enough dependency edges to choose a **conservative but targeted subset**. If no reliable selective runner exists, use a justified isolated check or record unverified evidence/a genuine blocker. Do not silently run the entire suite to compensate for missing selectors.
 6. **Rerun only invalidated tests.** On failure, diagnose and fix, then rerun failed tests and any other selectors affected by the fix. Previously passing tests remain valid if their covered code, transitive dependencies, test definitions, generated state, toolchain/configuration and material environment have not changed. New tests added elsewhere do not invalidate unrelated passing evidence.
@@ -336,9 +387,9 @@ The index/handoff should hold **only** current GOAL selectors, observed outcome,
 ### Execution Evidence
 
 At GOAL completion report briefly:
-- GOAL ID and verified base/result commit or working-tree state;
+- GOAL ID (including simultaneous approved GOALs, if any) and verified base/result commit or working-tree state;
 - platform and verified primary model/effort if observable, and specialist tier if used;
-- counts/purposes of parallel workers and optional specialist invocations;
+- counts/purposes of economical parallel workers, **proactive visual/high-risk/complex specialist invocations**, and any blocker-driven escalations, without claiming token savings without measurement;
 - changed files, integration result, **exact selective tests/checks run and their outcomes**, and Expected Evidence verdict;
 - previously passing checks reused with valid provenance, material gaps/blockers, and only reliable usage metrics actually exposed by the client.
 
@@ -400,10 +451,10 @@ The **single** `IMPLEMENTATION_HANDOFF.md` in the consumer plan root must contai
 | `schema_version`, `checkpoint_id`, `updated_at` | Versioned, unambiguous checkpoint identity (UTC when recorded); do not assume a time alone orders concurrent writes. |
 | `repository`, `branch`, `base_commit`, `observed_HEAD` | Verified source provenance. Note whether changes were actually pushed and which workspace is authoritative. |
 | `platform_from`, `platform_to`, `profile`, `effective_model` | Last known platform and user-selected next platform/profile; mark unverified selections explicitly, not as runtime facts. |
-| `goal_id`, `goal_status`, `completed_slices`, `remaining_slices` | Current scope and only the material implementation slices already integrated versus remaining. |
-| `worktree_state`, `pending_integrations` | Uncommitted changed/untracked files, staged content, worktree/branch paths if relevant, ongoing worker ownership, conflicts and any unmerged patches. |
+| `authorized_goals`, `active_goals`, `goal_status`, `completed_slices`, `remaining_slices` | **Per-GOAL compact status** for the user-approved batch: ready/running/blocked/done, validated prerequisites, integrated slices and remaining work. Never silently add GOALs. |
+| `worktree_state`, `pending_integrations` | Uncommitted changed/untracked files, staged content, **per-worker/GOAL ownership and isolation**, worktree/branch paths, active image/artifact paths and availability where material, conflicts and any unmerged patches. |
 | `evidence`, `invalidated_evidence` | Compact, still-valid Expected Evidence and **only the affected test selectors**, with relevant code/config/dependency provenance; no cumulative historical suite log. |
-| `blocking_issue`, `next_action` | One concise current blocker and **one executable next safe action**, pointing to exact Plan Parts/files. |
+| `blocking_issue`, `next_actions` | Only material blockers and **one executable next safe action per active GOAL or shared integration gate**, pointing to exact Plan Parts/files; no microstep history. |
 | `transfer_state` | `ACTIVE`, `HANDOFF_READY`, `RESUMING`, `BLOCKED` or `DONE`, with writer ownership and incomplete-transfer notes. |
 
 Omit empty/irrelevant fields and resolved history, previous failed approaches, huge diffs/logs, transcripts, old agents, and repetitive test listings. Reference Git commits, changed file paths, small diffs, or external test artifacts when needed; do not paste entire files into the checkpoint.
@@ -413,9 +464,9 @@ Omit empty/irrelevant fields and resolved history, previous failed approaches, h
 1. **Prepare on the outgoing platform when possible.** At a meaningful boundary, stop launching subagents, receive or terminate active work, and integrate/record each worker's outcomes. Quiesce active writers. For an abrupt usage-limit interruption, acknowledge that a final checkpoint may be impossible; the incoming platform reconstructs **only uncertain state** from the last checkpoint and real repository/working-tree evidence.
 2. **Preserve implementation bytes.** Prefer a coherent checkpoint commit for integrated source and the small handoff update **when safe and authorized**. If files remain uncommitted, list affected paths and ensure the incoming platform can access the same physical worktree or an explicitly exported patch. A Markdown handoff does **not** transfer unstaged files, ignored assets, unpushed commits, private build artifacts, or worktrees between devices.
 3. **User selects the next platform/profile.** Never silently switch accounts or providers, or automatically start another provider to work around usage restrictions. The user launches/resumes the new client's session in the repository and authorizes the current GOAL continuation.
-4. **Incoming platform verifies** plan root, canonical handoff, branch/HEAD, uncommitted changes/patches, missing generated state, existing writer processes/subagents and outstanding integration. Do not overwrite working files or change branches in a way that loses progress. If parent and child writers may both continue, obtain exclusive ownership or stop until the ambiguity is resolved.
+4. **Incoming platform verifies** plan root, canonical handoff, **all authorized active GOALs and their prerequisites**, branch/HEAD, uncommitted changes/patches, **accessible screenshots/visual artifacts**, missing generated state, existing writer processes/subagents and outstanding integration. Do not overwrite working files or change branches in a way that loses progress. If parent and child writers may both continue, obtain exclusive ownership or stop until the ambiguity is resolved.
 5. **Run only the incoming platform adapter's Compatibility Gate** (§10). Reuse verified model role/config when valid; do not rewrite the other platform's adapter or regenerate all agent files. If the chosen platform cannot safely meet a mandatory capability, request explicit approval for a supported fallback or stop.
-6. **Resume exactly once.** Change checkpoint to `RESUMING` then `ACTIVE` only after obtaining writer ownership and verifying the current code state. Complete **only remaining slices**. Previously passing tests remain valid under §15's dependency and environment rules; run only invalidated/affected named tests **and never the full suite as a platform-resume check**.
+6. **Resume exactly once.** Change checkpoint to `RESUMING` then `ACTIVE` only after obtaining writer ownership and verifying the current code state. Reconstruct a ready queue from **only the already authorized GOAL set**, complete **only remaining slices**, and preserve safe concurrent ownership. Previously passing tests remain valid under §15's dependency and environment rules; run only invalidated/affected named tests **and never the full suite as a platform-resume check**.
 7. **Checkpoint after subsequent coherent milestones** and before another intentional switch. Finish at `DONE` only when all GOAL Expected Evidence is valid against the final relevant state.
 
 Avoid excessive checkpoint commits and status churn; durable state must be sufficient for recovery, not a detailed execution diary. If the old platform was interrupted mid-step, assume that slice is **unverified**, inspect existing diffs and tests, and continue safely instead of discarding or blindly repeating work.
@@ -429,15 +480,18 @@ Continue the approved GOAL from plans/<plan-name>/IMPLEMENTATION_HANDOFF.md.
 Verify current HEAD and working-tree changes, current writer ownership,
 completed vs pending slices, and validity of existing Expected Evidence.
 Use the selected platform's verified agent profile and its compatibility gate.
-Resume the exact next safe action without replaying past work.
-Preserve approved scope. Update only the compact execution checkpoint.
+Resume the ready queue for **only the previously authorized GOALs**,
+dispatch independent work when safely parallelizable, and route genuine
+visual/high-risk work to a verified capable specialist if permitted.
+Do not replay completed work. Preserve write ownership and approved scope.
+Update only the compact execution checkpoint.
 ```
 
 No system can guarantee continuity of a running agent's internal thoughts, live in-memory state, session permissions, or unpersisted buffers. The contract guarantees **recoverable project progress to the extent it was persisted and verified**, not transparent migration of execution.
 
 ### External research notes
 
-As checked **2026-11-02**: Antigravity documentation distinguishes the App, CLI, IDE and SDK; its custom subagents support Markdown/YAML, clean context and optional isolated worktrees, with `flash`/`pro`/ `inherit` tier selection; Gemini Flash Medium labels vary over time. Legacy Antigravity IDE workflows were deprecated effective 2026-10-19. Reverify features/model names on the actual installed surface before generating files or claiming model routing.
+As checked **2026-11-02**: Antigravity documentation distinguishes the App, CLI, IDE and SDK; its custom subagents support Markdown/YAML, clean context and optional isolated worktrees, with `flash`/`pro`/`inherit` tier selection; Gemini Flash Medium labels vary over time. As of **2026-11-04**, official Codex guidance supports prompting local clients to delegate and shows that agents have independent work/context but consume extra resources; Antigravity documents concurrent custom agents, worktree isolation and screenshot/browser tooling on **specific surfaces**. Verify actual multimodal access before delegating image review. Legacy Antigravity IDE workflows were deprecated effective 2026-10-19. Reverify features/model names on the actual installed surface before generating files or claiming model routing.
 
 ## 20. Maintaining and evolving this protocol
 

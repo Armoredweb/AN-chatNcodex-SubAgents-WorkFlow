@@ -8,7 +8,7 @@ O **ChatGPT realiza o planejamento técnico pesado**: lê o código, decide a ar
 
 Na plataforma selecionada, o agente principal **orquestra e implementa**. O Codex pode usar Luna High; o Antigravity pode usar Gemini Flash Medium, após verificar o modelo disponível. Há dois modos: **duas capacidades** (principal barato, trabalhadores paralelos e especialista forte opcional) e **modelo único** (principal e subagentes paralelos no mesmo modelo, sem especialista forte obrigatório).
 
-A meta é concluir cada GOAL autonomamente e permitir que o usuário **troque de plataforma no meio da implementação**, continuando do estado salvo, sem copiar histórico de conversas.
+A meta é concluir rapidamente **GOALs ou lotes de GOALs independentes já autorizados**, usando mais implementação paralela quando vantajosa, e permitir que o usuário **troque de plataforma no meio da implementação**, continuando do estado salvo, sem copiar histórico. O agente principal deve priorizar coordenação e integração quando houver trabalho independente suficiente, mas pode implementar diretamente tarefas críticas.
 
 ## 1. Identifique os repositórios
 
@@ -65,7 +65,7 @@ Prossiga com a decomposição conforme o workflow canônico.
 
 Após a primeira decomposição e criação do índice, ocorre uma pausa obrigatória para revisão do escopo. O comando `continue` inicia o **Decomposition Audit Gate**, verificando MASTER_PLAN ↔ PLAN_INDEX nos dois sentidos.
 
-A expansão deve priorizar **o máximo de código de implementação correto e útil que o ChatGPT conseguir produzir**, incluindo funções, interfaces, tratamento de erros, integração e pseudocódigo detalhado. Plan Parts maiores e ricos em código são desejáveis quando economizam raciocínio da Luna. Não reduzir código útil para deixar os planos pequenos. Planejar **somente os testes relacionados ao código alterado e às dependências/consumidores afetados**, com seletores específicos por lote/GOAL. A suíte pode crescer no repositório, mas nunca deve ser executada inteira durante a implementação.
+A expansão deve priorizar **o máximo de código de implementação correto e útil que o ChatGPT conseguir produzir**, incluindo funções, interfaces, tratamento de erros, integração e pseudocódigo detalhado. O índice deve separar **dependências reais de GOALs que podem executar simultaneamente** e prever delegação proativa de análise visual, riscos altos e fragmentos muito complexos. Plan Parts maiores e ricos em código são desejáveis quando economizam raciocínio da Luna. Não reduzir código útil para deixar os planos pequenos. Planejar **somente os testes relacionados ao código alterado e às dependências/consumidores afetados**, com seletores específicos por lote/GOAL. A suíte pode crescer no repositório, mas nunca deve ser executada inteira durante a implementação.
 
 Antes do handoff portátil de implementação, o ChatGPT executa:
 - **Pass A:** otimização sem perder informações necessárias;
@@ -99,11 +99,16 @@ Não confunda TOML/YAML válido com confirmação de que o modelo correto foi ut
 Depois de validar o ambiente:
 
 ~~~text
-Inicie o GOAL G01 do IMPLEMENTATION_HANDOFF.md atual.
+Inicie o GOAL G01 (ou o lote de GOALs expressamente autorizado)
+do IMPLEMENTATION_HANDOFF.md atual.
 Use o agente principal verificado da plataforma/perfil selecionados.
-Implemente grandes partes coerentes com o código dos planos.
-Delegue só tarefas independentes úteis ou bloqueios comprovados,
-sempre com contexto mínimo e limites explícitos.
+Verifique o que está pronto e independente; distribua implementações
+simples e paralelas a dois ou mais agentes econômicos quando compensar.
+Coordene as integrações e implemente diretamente o caminho crítico.
+No modo de duas capacidades, delegue cedo a um especialista verificado
+a análise real de imagens/capturas de tela, riscos altos ou partes
+muito complexas, com referências exatas e contexto mínimo.
+Não inicie GOALs não autorizados nem altere a arquitetura aprovada.
 Execute apenas testes específicos do código alterado e das
 dependências/consumidores afetados, usando filtros explícitos.
 NUNCA execute toda a suíte durante a implementação, nem no fim
@@ -115,7 +120,7 @@ Respeite arquitetura e arquivos autorizados.
 Não solicite trocas manuais de modelo durante o GOAL.
 ~~~
 
-O agente principal implementa lotes coerentes e corrige falhas normais sem escalonar imediatamente. Testes antecipados ficam reservados a contratos fundamentais ou riscos altos. Testes anteriormente aprovados só devem ser repetidos quando o código coberto, suas dependências relevantes, seus seletores ou o ambiente/configuração mudarem; após uma correção, executar apenas os testes impactados. A suíte completa continua crescendo como conjunto de testes disponíveis, mas nunca é executada automaticamente durante um GOAL. No modo de duas capacidades, pode chamar um especialista forte em **Solve Only**, ou **Scoped Implementation** quando indispensável. No modo de modelo único não deve chamar um modelo mais caro sem nova autorização.
+O agente principal coordena e integra **GOALs autorizados e componentes independentes simultâneos**, preferencialmente delegando implementação simples a trabalhadores econômicos quando houver ganho. Ele também pode implementar diretamente o trabalho crítico. Falhas normais são corrigidas sem escalonamento automático. Testes antecipados ficam reservados a contratos fundamentais ou riscos altos. Testes anteriormente aprovados só devem ser repetidos quando o código coberto, suas dependências relevantes, seus seletores ou o ambiente/configuração mudarem; após uma correção, executar apenas os testes impactados. A suíte completa continua crescendo como conjunto de testes disponíveis, mas nunca é executada automaticamente durante um GOAL. No modo de duas capacidades, deve considerar um especialista mais capaz **proativamente** para avaliar imagens/capturas reais, composição visual, tarefas de alto risco ou muito complexas; preferir **Visual Review / Solve Only** e usar **Scoped Implementation** quando necessário. Enviar apenas os arquivos, referências de imagem e contratos mínimos, sem fazer o especialista procurar todo o projeto. No modo de modelo único não deve chamar um modelo mais caro sem nova autorização.
 
 O especialista pode solicitar arquivos adicionais específicos e justificar a necessidade; Luna só autoriza ampliação operacional dentro dos limites já aprovados.
 
@@ -123,7 +128,7 @@ Pausas podem ocorrer por permissões, limitações da plataforma, nova sessão n
 
 ## 6. Troca de plataforma, validação e encerramento
 
-Se uma plataforma atingir seu limite ou você preferir outra, a execução deve preservar um checkpoint pequeno em `IMPLEMENTATION_HANDOFF.md`: GOAL atual, partes concluídas e pendentes, HEAD/alterações locais, testes ainda válidos, integrações e subagentes pendentes, bloqueios e próximo passo exato. É necessário interromper trabalhos concorrentes ou registrar explicitamente os que não foram integrados.
+Se uma plataforma atingir seu limite ou você preferir outra, a execução deve preservar um checkpoint pequeno em `IMPLEMENTATION_HANDOFF.md`: **GOALs autorizados ativos/concluídos/bloqueados**, partes integradas e pendentes por GOAL, HEAD/alterações locais, testes ainda válidos, **responsáveis por worktrees e imagens/capturas acessíveis**, integrações e subagentes pendentes, bloqueios e próximos passos exatos. É necessário interromper trabalhos concorrentes ou registrar explicitamente os que não foram integrados.
 
 Na nova plataforma, abra o mesmo projeto/repositório e use:
 
@@ -132,8 +137,11 @@ Continue o GOAL aprovado a partir de
 plans/<nome-do-plano>/IMPLEMENTATION_HANDOFF.md.
 Verifique HEAD, alterações locais, responsáveis por escritas,
 partes concluídas, pendências e testes ainda válidos.
-Valide o perfil de agentes desta plataforma e implemente
-somente os passos restantes, sem repetir o histórico.
+Valide o perfil de agentes desta plataforma e distribua
+em paralelo o que estiver pronto e independente dentro dos
+GOALs já autorizados. Se houver análise visual/de alto risco,
+roteie para especialista capaz e verificado, quando permitido.
+Implemente somente os passos restantes, sem repetir o histórico.
 ~~~
 
 Ao retomar, execute somente os seletores de testes afetados ou invalidados, jamais toda a suíte como ritual de recuperação. Se o limite interromper a sessão abruptamente, o último checkpoint pode estar incompleto; o novo agente compara o arquivo com o código real antes de continuar. Alterações sem commit **não viajam entre computadores** por causa de um handoff: é preciso o mesmo diretório, commit ou patch explícito. A troca depende da sua ação e respeita os limites e permissões de cada serviço.

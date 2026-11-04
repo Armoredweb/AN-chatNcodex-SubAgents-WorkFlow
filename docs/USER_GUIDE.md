@@ -6,7 +6,7 @@ This is the practical entry point for using the [canonical workflow](WORKFLOW.md
 
 ChatGPT performs architecture and **code-rich** implementation planning. The selected platform uses a primary agent as **orchestrator and implementer**: Codex may use Luna High, and Antigravity may use a verified Gemini Flash Medium-class model. Choose **dual-tier mode** (economical primary/workers plus optional stronger specialist) or **single-model mode** (same model for primary and parallel workers, no stronger tier).
 
-The goal is end-to-end implementation of an approved GOAL without unnecessary model switches. When the user moves between platforms, the next agent resumes from a **portable execution checkpoint**, not the prior chat transcript. Agent configuration, permissions, and effective routing must be verified on each platform.
+The goal is fast implementation of **an approved GOAL or explicitly authorized batch of independent GOALs**, without unnecessary model switches. The primary **actively schedules economical parallel implementation workers**, coordinates results and may implement critical-path tasks itself. A dual-tier profile also supports **proactive** stronger-model visual screenshot review and high-risk/complex fragments. When the user moves between platforms, the next agent resumes from a **portable execution checkpoint**, not the prior chat transcript. Agent configuration, permissions, and effective routing must be verified on each platform.
 
 ## 1. Choose repositories
 
@@ -69,7 +69,7 @@ For substantial Plan Parts, ChatGPT should provide **as much verified, directly 
 - **Pass B:** specialist minimization, Luna routing, and worthwhile parallelism;
 - **Pass C:** cross-plan, current-source, and multi-agent consistency.
 
-It then produces the platform-neutral `IMPLEMENTATION_HANDOFF.md` GOAL contract and initial execution checkpoint. Existing `CODEX_HANDOFF.md` files may be migrated as read-only compatibility pointers. No specialist should be scheduled merely because a task looks intimidating.
+It then produces the platform-neutral `IMPLEMENTATION_HANDOFF.md` GOAL contract and initial execution checkpoint, identifying **independent GOALs eligible for parallel execution, real dependency gates, worker ownership and proactive specialist candidates**. Existing `CODEX_HANDOFF.md` files may be migrated as read-only compatibility pointers. No specialist should be scheduled merely because a task looks intimidating.
 
 ## 4. Select the platform/profile and bootstrap its agents
 
@@ -100,8 +100,12 @@ After compatibility is verified, start the approved GOAL:
 ~~~text
 Start GOAL G01 from the current IMPLEMENTATION_HANDOFF.md.
 Use the verified primary implementer for my selected platform/profile.
-Implement substantial coherent slices directly from prepared code;
-delegate only useful independent work or justified hard blockers.
+Check all authorized ready GOALs and independent slices first.
+Proactively spawn economical workers for useful separate components;
+coordinate/integrate results while handling critical-path work directly.
+In dual-tier mode, route subtle screenshot/visual review and genuinely
+high-risk or complex fragments to a verified stronger specialist early.
+Give each agent exact files, contracts and minimal relevant evidence.
 Select explicit test cases/files/packages for changed functionality and
 its affected dependencies/consumers only; NEVER run the full suite in a GOAL.
 Reuse valid passing results; on failure rerun only invalidated tests.
@@ -111,13 +115,13 @@ Stay inside approved architecture and write scope.
 Do not ask me to switch models during the GOAL.
 ~~~
 
-The primary implements larger coherent slices, optionally uses independent workers of the selected model, and escalates a verified hard problem in **Solve Only** mode only under a dual-tier profile. In single-model mode it must not invent an expensive specialist. **The full accumulated test suite must not be run during implementation, including at the end of a GOAL.** Select direct changed-module tests and impacted dependencies only. Earlier tests are limited to scoped foundational or high-risk dependencies. Passing results are not rerun unless their covered source, dependencies, selectors or relevant environment changed. A specialist can request specific additional context; Luna authorizes it only within already-approved limits.
+The primary implements, but should **prefer coordinating multiple economical workers** when worthwhile parallel GOALs/components are ready. In dual-tier mode it may **proactively** ask a capable specialist to analyze actual screenshot/image artifacts, high-risk interfaces or complex implementations, before failures occur; use **Visual Review / Solve Only** when sufficient, or restricted Scoped Implementation. The specialist must receive actual accessible images and a precise question, not just a weak-model description. Single-model mode remains single-tier unless you authorize otherwise. **The full accumulated test suite must not be run during implementation, including at the end of a GOAL.** Select direct changed-module tests and impacted dependencies only. Earlier tests are limited to scoped foundational or high-risk dependencies. Passing results are not rerun unless their covered source, dependencies, selectors or relevant environment changed. A specialist can request specific additional context; Luna authorizes it only within already-approved limits.
 
 GOALs may require a user action if the client must resume a paused session, request genuine permission, or resolve an architectural blocker. These are not manual model switches.
 
 ## 6. Switch platforms mid-GOAL, then complete and close the cycle
 
-When usage capacity is unavailable or you want to change providers, stop concurrent writers and preserve the code plus a **compact** `IMPLEMENTATION_HANDOFF.md` checkpoint: repository/HEAD and dirty files, current GOAL, completed and remaining integrated slices, last still-valid tests, active subagents/worktrees/conflicts, chosen next profile and one exact next action. A checkpoint alone cannot transport uncommitted files to another computer; use the same working tree or an explicit commit/patch.
+When usage capacity is unavailable or you want to change providers, stop concurrent writers and preserve the code plus a **compact** `IMPLEMENTATION_HANDOFF.md` checkpoint: repository/HEAD and dirty files, **all authorized active GOALs with completed/remaining slices**, still-valid targeted tests, active subagents/worktrees/ownership/conflicts, accessible visual artifact paths, chosen next profile and a next ready action per workstream. A checkpoint alone cannot transport uncommitted files to another computer; use the same working tree or an explicit commit/patch.
 
 The user opens the other platform in the same consumer project and resumes with:
 
@@ -125,8 +129,10 @@ The user opens the other platform in the same consumer project and resumes with:
 Continue the approved GOAL from plans/<plan-name>/IMPLEMENTATION_HANDOFF.md.
 Check real HEAD and uncommitted changes, ownership of any active writers,
 completed work and tests still valid. Run the incoming platform's
-Compatibility Gate, then continue only the next remaining slice.
-Keep the plan and scope unchanged. Do not replay previous chat history.
+Compatibility Gate, then dispatch independent remaining approved work
+concurrently where safe. Route subtle visual/high-risk tasks to a
+verified capable specialist when authorized. Keep the scope unchanged.
+Do not replay prior chat or completed implementation.
 ~~~
 
 Carry only still-valid outcomes and invalidated **targeted test selectors** into the next platform; switching does not trigger a full regression suite. A sudden limit can prevent the outgoing agent from updating its final checkpoint. The incoming agent must reconcile the last persisted checkpoint with the actual code and mark uncertain work as unverified, not discard or duplicate it. Switching is **user-initiated** and subject to each provider's rules; neither platform's in-memory session transfers automatically.

@@ -8,8 +8,9 @@ A ChatGPT-first, **platform-portable** planning and multi-agent implementation w
 
 - **ChatGPT plans code-first:** inspect current source, settle architecture and interfaces, design algorithms, and produce **substantial verified implementation code or detailed pseudocode** to reduce Luna's reasoning. Code-rich Plan Parts are welcome; brevity must never remove useful implementation detail.
 - **Portable execution:** Codex can use Luna High; Antigravity can use a verified Gemini Flash Medium-class agent. The primary model both orchestrates **and implements** each bounded GOAL.
-- **Configurable model modes:** dual-tier (economical primary/workers plus optional stronger specialist) or single-model (same model for primary and parallel workers). Specialists are exceptional and prefer **Solve Only**; **Scoped Implementation** is a bounded fallback.
-- **Context stays deliberate:** minimal delegation packets, justified progressive context requests, explicit ownership, and no unnecessary full-history forks.
+- **Adaptive orchestration:** the primary dynamically schedules useful independent work **within and across user-authorized GOALs**, delegating simple implementation to economical parallel workers while coordinating/integrating and optionally implementing critical-path tasks.
+- **Capability-aware specialists:** dual-tier mode proactively routes **subtle screenshot/image inspection, visual composition, high-risk contracts and unusually complex fragments** to a verified stronger agent with actual artifacts, exact file references and minimal context. Prefer **Visual Review / Solve Only**; **Scoped Implementation** is a bounded fallback. Single-model mode uses the same model for primary and parallel workers.
+- **Context stays deliberate:** precise task and file/symbol references, relevant code and **actual image artifacts for visual analysis**, justified progressive context requests, explicit ownership, and no unnecessary full-history forks.
 - **Selective GOAL testing:** keep a growing, cumulative repository test suite, but during implementation execute **only explicitly targeted tests of changed code and affected dependencies/consumers**. Never run the entire suite in a GOAL—even at completion—or repeat unaffected passing tests. A compact `IMPLEMENTATION_HANDOFF.md` preserves current evidence and the next safe action across platforms.
 
 This is an independently maintained successor to [AN-chatNcodex-WorkFlow](https://github.com/Armoredweb/AN-chatNcodex-WorkFlow), not a synchronized fork. The original remains reference-only.
@@ -27,9 +28,9 @@ User -> ChatGPT (approved architecture + code-rich portable planning)
      -> working GitHub repository (MASTER_PLAN, PLAN_INDEX, Plan Parts)
      -> IMPLEMENTATION_HANDOFF.md (approved GOAL + current checkpoint)
      -> selected platform: Codex or Antigravity
-           |-> primary implementer/orchestrator (economical or single-model)
-           |-> parallel workers only when useful
-           |-> optional stronger specialist only in dual-tier mode
+           |-> primary orchestrates ready approved GOALs + critical path
+           |-> economical workers implement independent GOALs/components
+           |-> capable visual/high-risk/complex specialist in dual-tier mode
      -> integration + Expected Evidence
      -> user-initiated switch -> resume remaining GOAL from checkpoint
      -> ChatGPT convergence review -> cycle closure
@@ -43,7 +44,7 @@ Model IDs where supported, otherwise effective UI labels and agent tiers, effort
 
 1. Implementation readiness through **code-forward complete plans**: prioritize useful code and precise pseudocode over aggressive document compression; shorten redundant prose, not the implementation.
 2. No unnecessary specialist calls, repeated scans, artificial retries, or token-heavy context forwarding; single-model operation is supported.
-3. Parallelism only when dependencies, write ownership, integration, and shared state make it beneficial and safe; test runs are scoped and coordinated.
+3. **Proactive parallel implementation** for genuinely independent authorized GOALs/components; coordinate dependencies, write ownership, shared resources and scoped test runs without serializing unrelated work.
 4. Code and repository evidence outrank memory or obsolete notes. Approved requirements still govern convergence.
 5. User-controlled platform switching preserves implementation progress and valid targeted test evidence. Comprehensive suite execution, if needed, is a **separate post-implementation validation gate**, never a routine GOAL step. Respect authorization and provider limits.
 
